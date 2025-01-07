@@ -4,7 +4,7 @@ function App() {
 
   return (
     <>
-      <p>Mudei esse nome</p>
+      <p>Bem vindo</p>
     </>
   )
 }
