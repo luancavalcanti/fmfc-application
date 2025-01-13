@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import { UserContext } from "../contex/userContex"
-import Home from "./home"
+import Employees from "./Employees"
+import Clients from "./Clients"
 
 export default function Login(){
     const { signIn, login, logout, email, setEmail, senha, setSenha, user } = useContext(UserContext)
@@ -10,7 +11,8 @@ export default function Login(){
                 <>
                     <h2>{user.email}</h2>
                     <button onClick={logout}>Logout</button>
-                    <Home/>
+                    <Employees/>
+                    <Clients/>
                 </>
               )
             : (
