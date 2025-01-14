@@ -1,17 +1,15 @@
 import { useContext } from "react"
-import FormInput from "./FormInput"
-import { CRUDContext } from "../contex/CURDContext"
+import TextInput from "./TextInput"
+import { CRUDContext } from "../context/CURDContext"
 
-/* eslint-disable react/prop-types */
-export default function DefaultCRUD(props){
-    const { 
-        title, 
-        formObject, 
-        formData,
-        collectionName,
+export default function DefaultCRUD(props) {
+    const {
+        title,
+        formObject,
+        formData, setFormData,
     } = props
 
-    const { 
+    const {
         handleNewForm,
         newForm,
         editing,
@@ -19,39 +17,47 @@ export default function DefaultCRUD(props){
         data,
         cancelEdit,
         handleEdit,
-        handleRemove 
+        handleRemove,
+        collectionName
     } = useContext(CRUDContext)
 
-    return(
+    function handleChangeInput(e) {
+        const { name, value } = e.target
+        setFormData(prev => ({
+            ...prev,
+            [name]: value,
+        }))
+    }
+
+    return (
         <>
             <h1>{title}</h1>
-            <button onClick={handleNewForm}>New Employee</button>
-            {   
+            <button onClick={handleNewForm}>New {title}</button>
+            {
                 newForm && (
-                    
                     <>
                         <h2>Employee Form</h2>
                         {
                             formObject.map((object, index) => {
-                                const { label, type, name, value, onChange } = object
-                                return(
+                                const { label, type, name } = object
+                                return (
                                     <div key={index}>
-                                        <FormInput 
+                                        <TextInput
                                             label={label}
                                             type={type}
                                             name={name}
-                                            value={value}
-                                            onChange={onChange}
+                                            value={formData}
+                                            onChange={handleChangeInput}
                                         />
-                                    </div> 
+                                    </div>
                                 )
                             })
                         }
                         <div>
                             {
                                 editing
-                                ?<button onClick={(e) => handleForm(e, collectionName)}>Editar</button>
-                                :<button onClick={(e) => handleForm(e, collectionName)}>Criar</button>
+                                    ? <button onClick={(e) => handleForm(e, collectionName)}>Editar</button>
+                                    : <button onClick={(e) => handleForm(e, collectionName)}>Criar</button>
                             }
                         </div>
                     </>
@@ -74,30 +80,30 @@ export default function DefaultCRUD(props){
                                 {
                                     formObject.map((object, index) => {
                                         const { type, name, value, onChange } = object
-                                        return(
-                                                <td key={index}>
-                                                    {item[name]}
-                                                    {
-                                                        editing && item.id === formData.id && 
-                                                        <input type={type} name={name} value={value} onChange={onChange}/>
-                                                    }
-                                                </td>          
+                                        return (
+                                            <td key={index}>
+                                                {item[name]}
+                                                {
+                                                    editing && item.id === formData.id &&
+                                                    <input type={type} name={name} value={value} onChange={onChange} />
+                                                }
+                                            </td>
                                         )
                                     })
                                 }
                                 <td>
                                     {
-                                        editing 
-                                            ?(item.id === formData.id && 
+                                        editing
+                                            ? (item.id === formData.id &&
                                                 <>
-                                                    <button onClick={(e)=> handleForm(e, collectionName)}>Update</button>
+                                                    <button onClick={(e) => handleForm(e, collectionName)}>Update</button>
                                                     <button onClick={() => cancelEdit()}>Cancel</button>
                                                 </>
                                             )
-                                            :( 
+                                            : (
                                                 <>
-                                                <button onClick={()=>handleEdit(item)}>Edit</button>
-                                                <button onClick={()=>handleRemove(collectionName, item.id)}>Remove</button>
+                                                    <button onClick={() => handleEdit(item)}>Edit</button>
+                                                    <button onClick={() => handleRemove(collectionName, item.id)}>Remove</button>
                                                 </>
                                             )
                                     }

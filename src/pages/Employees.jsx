@@ -1,73 +1,60 @@
-import { useContext } from "react"
 import DefaultCRUD from "../components/DefaultCRUD"
-import { CRUDContext } from "../contex/CURDContext"
+import { CRUDProvider } from "../context/CURDContext";
 
-export default function Employees(){
-    
-    const {
-        handleChangeInput,
-        formData,
-    } = useContext(CRUDContext)
-
-    
- 
+export default function Employees() {
+    const getCurrentDate = () => { const today = new Date(); return today.toISOString().split("T")[0]; };
+    const formDefaultEmployees = {
+        name: "",
+        lastname: "",
+        email: "",
+        phone: "",
+        language: "",
+        dob: "",
+        dateIn: getCurrentDate()
+    }
     const formObject = [
         {
-            label:"Name",
-            type:"text",
-            name:"name",
-            value: formData.name,
-            onChange: handleChangeInput
+            label: "Name",
+            type: "text",
+            name: "name",
         },
         {
-            label:"Lastname",
-            type:"text",
-            name:"lastname",
-            value: formData.lastname,
-            onChange: handleChangeInput
+            label: "Lastname",
+            type: "text",
+            name: "lastname",
         },
         {
-            label:"E-mail",
-            type:"email",
-            name:"email",
-            value: formData.email,
-            onChange: handleChangeInput
+            label: "E-mail",
+            type: "email",
+            name: "email",
         },
         {
-            label:"Phone",
-            type:"tel",
-            name:"phone",
-            value: formData.phone,
-            onChange: handleChangeInput
+            label: "Phone",
+            type: "tel",
+            name: "phone",
         },
         {
-            label:"Lenguage",
-            type:"text",
-            name:"lenguage",
-            value: formData.lenguage,
-            onChange: handleChangeInput
+            label: "Language",
+            type: "text",
+            name: "language",
         },
         {
-            label:"DoB",
-            type:"date",
-            name:"dob",
-            value: formData.dob,
-            onChange: handleChangeInput
+            label: "DoB",
+            type: "date",
+            name: "dob",
         },
         {
-            label:"Date In",
-            type:"date",
-            name:"dateIn",
-            value: formData.dateIn,
-            onChange: handleChangeInput
+            label: "Date In",
+            type: "date",
+            name: "dateIn",
         },
     ]
-    return(
-        <DefaultCRUD 
-            title="Employees"
-            collectionName="employees"
-            formObject={formObject}
-            formData={formData}
-        />
+    return (
+        <CRUDProvider collectionName="employees" formDefault={formDefaultEmployees}>
+            <DefaultCRUD
+                title="Employees"
+                formObject={formObject}
+            />
+        </CRUDProvider>
     )
 }
