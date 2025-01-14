@@ -9,7 +9,6 @@ export function EmployeeProvider({ children }){
     //Pegar a data de hoje no formato do campo input
     const getCurrentDate = () => { const today = new Date(); return today.toISOString().split("T")[0]; };
     const formDefault = {
-        id: "",
         name: "",
         lastname: "",
         dob: "",
@@ -23,6 +22,7 @@ export function EmployeeProvider({ children }){
     const [employees, setEmployees] = useState([])
     const [formEmployee, setFormEmployee] = useState(formDefault)
     const [editing, setEditing] = useState(false)
+    const [newForm, setNewForm] = useState(false)
 
     useEffect(()=>{
         getEmployees()
@@ -44,7 +44,7 @@ export function EmployeeProvider({ children }){
         if(editing){
             const employeeRef = doc(db, 'employees', formEmployee.id)
             await updateDoc(employeeRef, formEmployee)
-            getEmployees()
+            await getEmployees()
             setFormEmployee(formDefault)
             setEditing(false)
             console.log("Employee editado com suceso!")
@@ -52,8 +52,9 @@ export function EmployeeProvider({ children }){
             try{
                 const docRef = await addDoc(collection(db, "employees"), formEmployee)
                 console.log("Documento criado com id: ", docRef.id)
-                getEmployees()
+                await getEmployees()
                 setFormEmployee(formDefault)
+                setNewForm(false)
             } catch (error){
                 console.error("Erro ao adicionar no banco: ", error)
             }
@@ -96,17 +97,23 @@ export function EmployeeProvider({ children }){
         console.log('Employee removido com sucesso!')
     }
 
+    function handleNewForm(){
+        setNewForm(!newForm)
+    }
+
 
     return(
         <EmployeeContext.Provider value={{
            employees,
             formEmployee,
             editing,
+            newForm,
             handleFormEmployee,
             cancelEdit,
             handleChangeInput,
             handleEditEmployee,
             handleRemoveEmployee,
+            handleNewForm,
         }}>
             {children}
         </EmployeeContext.Provider>

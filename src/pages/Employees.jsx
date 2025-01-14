@@ -1,149 +1,73 @@
 import { useContext } from "react"
-import { EmployeeContext } from "../contex/EmployeeContext"
-import FormInput from "../components/FormInput"
+import DefaultCRUD from "../components/DefaultCRUD"
+import { CRUDContext } from "../contex/CURDContext"
 
 export default function Employees(){
-    const { 
-        employees,
-        formEmployee,
-        editing,
-        handleFormEmployee,
-        cancelEdit,
+    
+    const {
         handleChangeInput,
-        handleEditEmployee,
-        handleRemoveEmployee,
-    } = useContext(EmployeeContext)
+        formData,
+    } = useContext(CRUDContext)
 
+    
+ 
     const formObject = [
         {
             label:"Name",
             type:"text",
             name:"name",
-            value: formEmployee.name,
+            value: formData.name,
             onChange: handleChangeInput
         },
         {
             label:"Lastname",
             type:"text",
             name:"lastname",
-            value: formEmployee.lastname,
+            value: formData.lastname,
             onChange: handleChangeInput
         },
         {
             label:"E-mail",
             type:"email",
             name:"email",
-            value: formEmployee.email,
+            value: formData.email,
             onChange: handleChangeInput
         },
         {
             label:"Phone",
             type:"tel",
             name:"phone",
-            value: formEmployee.phone,
+            value: formData.phone,
             onChange: handleChangeInput
         },
         {
             label:"Lenguage",
             type:"text",
             name:"lenguage",
-            value: formEmployee.lenguage,
+            value: formData.lenguage,
             onChange: handleChangeInput
         },
         {
             label:"DoB",
             type:"date",
             name:"dob",
-            value: formEmployee.dob,
+            value: formData.dob,
             onChange: handleChangeInput
         },
         {
             label:"Date In",
             type:"date",
             name:"dateIn",
-            value: formEmployee.dateIn,
+            value: formData.dateIn,
             onChange: handleChangeInput
         },
     ]
     return(
-        <>
-        <h1>Employees</h1>
-        <h2>Employee Form</h2>
-        {
-            formObject.map((object, index) => {
-                
-                const { label, type, name, value, onChange } = object
-                console.log(label)
-                return(
-                    <div key={index}>
-                        <FormInput 
-                            label={label}
-                            type={type}
-                            name={name}
-                            value={value}
-                            onChange={onChange}
-                        />
-                    </div> 
-                )
-            })
-        }
-        <div>
-            {
-                editing
-                ?<button onClick={handleFormEmployee}>Editar</button>
-                :<button onClick={handleFormEmployee}>Criar</button>
-            }
-        </div>
-        <h2>Employees List</h2>
-        <table>
-            <thead>
-                <tr>
-                    {
-                        formObject.map((object, index) => <th key={index}>{object.label}</th>)
-                    }
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    employees?.map((employee, index) => (
-                        <tr key={index}>
-                            {
-                                formObject.map((object, index) => {
-                                    const { type, name, value, onChange } = object
-                                    return(
-                                            <td key={index}>
-                                                {employee[name]}
-                                                {
-                                                    editing && employee.id === formEmployee.id && 
-                                                    <input type={type} name={name} value={value} onChange={onChange}/>
-                                                }
-                                            </td>          
-                                    )
-                                })
-                            }
-                            <td>
-                                {
-                                    editing 
-                                        ?(employee.id === formEmployee.id && 
-                                            <>
-                                                <button onClick={()=>handleEditEmployee(employee)}>Update</button>
-                                                <button onClick={cancelEdit}>Cancel</button>
-                                            </>
-                                        )
-                                        :( 
-                                            <>
-                                            <button onClick={()=>handleEditEmployee(employee)}>Edit</button>
-                                            <button onClick={()=>handleRemoveEmployee(employee)}>Remove</button>
-                                            </>
-                                        )
-                                }
-                            </td>
-                        </tr>
-                    ))
-                }
-            </tbody>
-        </table>
-        </>
+        <DefaultCRUD 
+            title="Employees"
+            collectionName="employees"
+            formObject={formObject}
+            formData={formData}
+        />
     )
 }
