@@ -1,16 +1,12 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { db } from "../firebase-config";
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 
-export const CRUDContext = createContext()
-
-export function CRUDProvider({ children, collectionName, formDefault }) {
-
+export default function useCRUD(collectionName, formDefault = "") {
     const [data, setData] = useState([])
     const [formData, setFormData] = useState(formDefault)
     const [editing, setEditing] = useState(false)
     const [newForm, setNewForm] = useState(false)
-
     useEffect(() => {
         getData(collectionName)
     }, [collectionName])
@@ -72,22 +68,16 @@ export function CRUDProvider({ children, collectionName, formDefault }) {
         setNewForm(!newForm)
     }
 
-
-    return (
-        <CRUDContext.Provider value={{
-            handleForm,
-            cancelEdit,
-            handleEdit,
-            handleRemove,
-            handleNewForm,
-            data,
-            formData, setFormData,
-            newForm,
-            editing,
-            collectionName,
-
-        }}>
-            {children}
-        </CRUDContext.Provider>
-    )
+    return {
+        handleForm,
+        cancelEdit,
+        handleEdit,
+        handleRemove,
+        handleNewForm,
+        data,
+        formData,
+        setFormData,
+        newForm,
+        editing,
+    }
 }

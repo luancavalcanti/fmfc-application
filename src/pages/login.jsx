@@ -4,6 +4,7 @@ import Clients from "./Clients"
 import TextInput from "../components/TextInput"
 import Contracts from "./Contracts"
 import { UserContext } from "../context/UserContext"
+import Services from "./Services"
 
 export default function Login() {
     const { signIn, login, logout, email, setEmail, senha, setSenha, user } = useContext(UserContext)
@@ -15,6 +16,7 @@ export default function Login() {
                     <button onClick={logout}>Logout</button>
                     <Employees />
                     <Clients />
+                    <Services />
                     <Contracts />
                 </>
             )

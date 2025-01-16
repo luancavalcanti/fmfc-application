@@ -1,26 +1,29 @@
-import { useContext } from "react"
+import useCRUD from "../hooks/useCRUD"
 import TextInput from "./TextInput"
-import { CRUDContext } from "../context/CURDContext"
 
 export default function DefaultCRUD(props) {
     const {
         title,
         formObject,
-        formData, setFormData,
+        collectionName,
+        formDefault
     } = props
 
+    const CRUD = useCRUD(collectionName, formDefault)
+
     const {
-        handleNewForm,
-        newForm,
-        editing,
         handleForm,
-        data,
         cancelEdit,
         handleEdit,
         handleRemove,
-        collectionName
-    } = useContext(CRUDContext)
-
+        handleNewForm,
+        data,
+        formData,
+        setFormData,
+        newForm,
+        editing,
+    } = CRUD
+    console.log(formData)
     function handleChangeInput(e) {
         const { name, value } = e.target
         setFormData(prev => ({
@@ -28,7 +31,6 @@ export default function DefaultCRUD(props) {
             [name]: value,
         }))
     }
-
     return (
         <>
             <h1>{title}</h1>
@@ -46,7 +48,7 @@ export default function DefaultCRUD(props) {
                                             label={label}
                                             type={type}
                                             name={name}
-                                            value={formData}
+                                            value={formData[name]}
                                             onChange={handleChangeInput}
                                         />
                                     </div>

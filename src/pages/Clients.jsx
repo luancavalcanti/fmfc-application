@@ -1,4 +1,3 @@
-import { CRUDProvider } from "../context/CURDContext";
 import DefaultCRUD from "../components/DefaultCRUD";
 
 export default function Clients() {
@@ -38,11 +37,11 @@ export default function Clients() {
   ];
 
   return (
-    <CRUDProvider collectionName="clients" formDefault={formDefaultClients}>
-      <DefaultCRUD
-        title="Clients"
-        formObject={formObject}
-      />
-    </CRUDProvider>
+    <DefaultCRUD
+      title="Clients"
+      collectionName="clients"
+      formObject={formObject}
+      formDefault={formDefaultClients}
+    />
   );
 }

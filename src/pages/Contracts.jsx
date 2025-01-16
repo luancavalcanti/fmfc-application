@@ -1,43 +1,38 @@
-import DefaultCRUD from "../components/DefaultCRUD"
-import { CRUDProvider } from "../context/CURDContext"
+import SelectInput from "../components/SelectInput"
+import useCRUD from "../hooks/useCRUD"
 
 export default function Contracts() {
-    const formDefaultContracts = {
-        client: "",
-        frequency: "",
-        service: "",
-        employees: '',
-    }
-    const formObject = [
-        {
-            label: "Client",
-            type: "text",
-            name: "client"
-        },
-        {
-            label: "Frequency",
-            type: "text",
-            name: "frequency"
-        },
-        {
-            label: "Service",
-            type: "text",
-            name: "service"
-        },
-        {
-            label: "Employee(s)",
-            type: "text",
-            name: "employees"
-        },
-    ]
+    const frequencies = ['Daily', 'Weekly', 'Biweekly', 'Monthly', 'Quarterly', 'Semiannually', 'Annually']
+    const employeesList = useCRUD('employees')
+    const clientList = useCRUD('clients')
+    const serviceList = useCRUD('services')
     return (
-
-        <CRUDProvider collectionName="contracts" formDefault={formDefaultContracts}>
-            <DefaultCRUD
-                title="Contracts"
-                formObject={formObject}
-            />
-        </CRUDProvider>
-
+        <>
+            <h1>Contracts</h1>
+            <div>
+                <SelectInput
+                    label="Employee"
+                    list={employeesList.data.map(employee => employee.name + " " + employee.lastname)}
+                />
+            </div>
+            <div>
+                <SelectInput
+                    label="Clients"
+                    list={clientList.data.map(client => client.name)}
+                />
+            </div>
+            <div>
+                <SelectInput
+                    label="Services"
+                    list={serviceList.data.map(service => service.desc)}
+                />
+            </div>
+            <div>
+                <SelectInput
+                    label="Frequency"
+                    list={frequencies}
+                />
+            </div>
+        </>
     )
 }
