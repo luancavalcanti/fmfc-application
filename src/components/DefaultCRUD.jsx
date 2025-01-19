@@ -23,7 +23,7 @@ export default function DefaultCRUD(props) {
         newForm,
         editing,
     } = CRUD
-    console.log(formData)
+
     function handleChangeInput(e) {
         const { name, value } = e.target
         setFormData(prev => ({
@@ -58,8 +58,8 @@ export default function DefaultCRUD(props) {
                         <div>
                             {
                                 editing
-                                    ? <button onClick={(e) => handleForm(e, collectionName)}>Editar</button>
-                                    : <button onClick={(e) => handleForm(e, collectionName)}>Criar</button>
+                                    ? <button onClick={() => handleForm(collectionName)}>Editar</button>
+                                    : <button onClick={() => handleForm(collectionName)}>Criar</button>
                             }
                         </div>
                     </>
@@ -98,7 +98,7 @@ export default function DefaultCRUD(props) {
                                         editing
                                             ? (item.id === formData.id &&
                                                 <>
-                                                    <button onClick={(e) => handleForm(e, collectionName)}>Update</button>
+                                                    <button onClick={() => handleForm(collectionName)}>Update</button>
                                                     <button onClick={() => cancelEdit()}>Cancel</button>
                                                 </>
                                             )

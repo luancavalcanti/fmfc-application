@@ -22,8 +22,7 @@ export default function useCRUD(collectionName, formDefault = "") {
         ))
         setData(dataDB)
     }
-    async function handleForm(e, collectionName) {
-        e.preventDefault()
+    async function handleForm(collectionName) {
         if (editing) {
             const docRef = doc(db, collectionName, formData.id)
             await updateDoc(docRef, formData)
@@ -33,7 +32,6 @@ export default function useCRUD(collectionName, formDefault = "") {
             console.log("Editado com suceso!")
         } else {
             try {
-                console.log(collectionName, formData)
                 const docRef = await addDoc(collection(db, collectionName), formData)
                 console.log("Documento criado com id: ", docRef.id)
                 await getData(collectionName)
