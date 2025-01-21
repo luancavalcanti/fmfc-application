@@ -10,7 +10,7 @@ export default function Contracts() {
         frequency: ""
     }
 
-    const collectionName = 'contract'
+    const collectionName = 'contracts'
     const CRUD = useCRUD(collectionName, formDefault)
     const { data, formData, setFormData, handleForm } = CRUD
     const frequencies = ['Daily', 'Weekly', 'Biweekly', 'Monthly', 'Quarterly', 'Semiannually', 'Annually']

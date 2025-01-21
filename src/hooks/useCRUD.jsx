@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { db } from "../firebase-config";
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 
@@ -11,17 +11,26 @@ export default function useCRUD(collectionName, formDefault = "") {
         getData(collectionName)
     }, [collectionName])
 
-    async function getData(collectionName) {
-        const docRef = collection(db, collectionName)
-        const dataSnapshot = await getDocs(docRef)
-        const dataDB = dataSnapshot.docs.map(doc => (
-            {
-                id: doc.id,
-                ...doc.data()
-            }
-        ))
-        setData(dataDB)
-    }
+    const getData = useCallback(async (collectionName) => {
+        try {
+            const docRef = collection(db, collectionName)
+            const dataSnapshot = await getDocs(docRef)
+            const dataDB = dataSnapshot.docs.map(doc => (
+                {
+                    id: doc.id,
+                    ...doc.data()
+                }
+            ))
+            setData(dataDB)
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
+
+    useEffect(() => {
+        getData(collectionName)
+    }, [collectionName, getData])
+
     async function handleForm(collectionName) {
         if (editing) {
             const docRef = doc(db, collectionName, formData.id)

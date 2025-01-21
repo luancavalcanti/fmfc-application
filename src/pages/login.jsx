@@ -15,10 +15,10 @@ export default function Login() {
                 <>
                     <h2>{user.email}</h2>
                     <button onClick={logout}>Logout</button>
-                    <Employees />
+                    {/* <Employees />
                     <Clients />
                     <Services />
-                    <Contracts />
+                    <Contracts /> */}
                     <Comments />
                 </>
             )
