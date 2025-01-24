@@ -21,7 +21,7 @@ export default function Comments() {
 
     const CRUD = useCRUD(collectionName, formDefault)
     const { formData, setFormData, data, handleForm } = CRUD
-    const contractsList = useCRUD('contract')
+    const contractsList = useCRUD('contracts')
     const list = contractsList.data?.map(contract => (
         {
             id: contract.id,

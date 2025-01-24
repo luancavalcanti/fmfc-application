@@ -1,4 +1,5 @@
 import useCRUD from "../hooks/useCRUD"
+import SelectInput from "./SelectInput"
 import TextInput from "./TextInput"
 
 export default function DefaultCRUD(props) {
@@ -6,7 +7,8 @@ export default function DefaultCRUD(props) {
         title,
         formObject,
         collectionName,
-        formDefault
+        formDefault,
+        role
     } = props
 
     const CRUD = useCRUD(collectionName, formDefault)
@@ -34,25 +36,41 @@ export default function DefaultCRUD(props) {
     return (
         <>
             <h1>{title}</h1>
-            <button onClick={handleNewForm}>New {title}</button>
+
             {
-                newForm && (
+                newForm && role === 'admin'(
                     <>
+                        <button onClick={handleNewForm}>New {title}</button>
                         <h2>Employee Form</h2>
                         {
                             formObject.map((object, index) => {
-                                const { label, type, name } = object
-                                return (
-                                    <div key={index}>
-                                        <TextInput
-                                            label={label}
-                                            type={type}
-                                            name={name}
-                                            value={formData[name]}
-                                            onChange={handleChangeInput}
-                                        />
-                                    </div>
-                                )
+                                const { label, type, list, name } = object
+
+                                if (list?.length > 0) {
+                                    return (
+                                        <div key={index}>
+                                            <SelectInput
+                                                label={label}
+                                                name={name}
+                                                list={list}
+                                                value={formData[name]}
+                                                onChange={handleChangeInput}
+                                            />
+                                        </div>
+                                    )
+                                } else {
+                                    return (
+                                        <div key={index}>
+                                            <TextInput
+                                                label={label}
+                                                type={type}
+                                                name={name}
+                                                value={formData[name]}
+                                                onChange={handleChangeInput}
+                                            />
+                                        </div>
+                                    )
+                                }
                             })
                         }
                         <div>
@@ -81,16 +99,28 @@ export default function DefaultCRUD(props) {
                             <tr key={index}>
                                 {
                                     formObject.map((object, index) => {
-                                        const { type, name, value, onChange } = object
-                                        return (
-                                            <td key={index}>
-                                                {item[name]}
-                                                {
-                                                    editing && item.id === formData.id &&
-                                                    <input type={type} name={name} value={value} onChange={onChange} />
-                                                }
-                                            </td>
-                                        )
+                                        const { type, name, list } = object
+                                        if (list?.length > 0) {
+                                            return (
+                                                <td key={index}>
+                                                    {item[name]}
+                                                    {
+                                                        editing && item.id === formData.id &&
+                                                        <SelectInput name={name} list={list} value={formData[name]} onChange={handleChangeInput} />
+                                                    }
+                                                </td>
+                                            )
+                                        } else {
+                                            return (
+                                                <td key={index}>
+                                                    {item[name]}
+                                                    {
+                                                        editing && item.id === formData.id &&
+                                                        <TextInput type={type} name={name} value={formData[name]} onChange={handleChangeInput} />
+                                                    }
+                                                </td>
+                                            )
+                                        }
                                     })
                                 }
                                 <td>

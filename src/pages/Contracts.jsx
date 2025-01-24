@@ -1,8 +1,7 @@
 import SelectInput from "../components/SelectInput"
 import useCRUD from "../hooks/useCRUD"
 
-export default function Contracts() {
-
+export default function Contracts({ uid, role }) {
     const formDefault = {
         employees: [],
         client: "",
@@ -13,12 +12,17 @@ export default function Contracts() {
     const collectionName = 'contracts'
     const CRUD = useCRUD(collectionName, formDefault)
     const { data, formData, setFormData, handleForm } = CRUD
+    let contractList = data
+    const contractFilteredList = data?.filter(contract => contract.employees.includes(uid));
     const frequencies = ['Daily', 'Weekly', 'Biweekly', 'Monthly', 'Quarterly', 'Semiannually', 'Annually']
     const employeesList = useCRUD('employees')
     const clientList = useCRUD('clients')
     const serviceList = useCRUD('services')
     let employeesArray = formData.employees
-
+    if (role !== 'admin') {
+        contractList = contractFilteredList
+    }
+    console.log(contractList)
     function handleEmployeeChange(e) {
         const { value } = e.target
         if (!employeesArray.includes(value)) {
@@ -48,79 +52,98 @@ export default function Contracts() {
         }))
     }
 
+    function showEmployeeName(uid) {
+        const filteredEmployee = employeesList.data.filter(employee => employee.uid === uid)[0]
+        const employeeName = `${filteredEmployee.name} ${filteredEmployee.lastname}`
+        return employeeName
+    }
+    // console.log(employeesArray)
     return (
         <>
             <h1>Contracts</h1>
+            {role === 'admin' &&
+                <>
+                    <div>
+                        <SelectInput
+                            label="Client"
+                            name="client"
+                            list={clientList.data.map(client => client.name)}
+                            value={formData.client}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <SelectInput
+                            label="Services"
+                            name="service"
+                            list={serviceList.data.map(service => service.desc)}
+                            value={formData.service}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <SelectInput
+                            label="Frequency"
+                            name="frequency"
+                            list={frequencies}
+                            value={formData.frequency}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
 
-            <div>
-                <SelectInput
-                    label="Client"
-                    name="client"
-                    list={clientList.data.map(client => client.name)}
-                    onChange={handleChange}
-                />
-            </div>
-            <div>
-                <SelectInput
-                    label="Services"
-                    name="service"
-                    list={serviceList.data.map(service => service.desc)}
-                    onChange={handleChange}
-                />
-            </div>
-            <div>
-                <SelectInput
-                    label="Frequency"
-                    name="frequency"
-                    list={frequencies}
-                    onChange={handleChange}
-                />
-            </div>
-            <div>
+                        {
+                            employeesArray.length > 0
+                            && (
+                                employeesArray.map((item, index) => (
+                                    <div key={index}>
+                                        <label>{showEmployeeName(item)}</label>
+                                        <button onClick={() => removeEmployee(item)}>-</button>
+                                    </div>
+                                ))
+                            )
 
-                {
-                    employeesArray.length > 0
-                    && (
-                        employeesArray.map((item, index) => (
-                            <div key={index}>
-                                <label>{item}</label>
-                                <button onClick={() => removeEmployee(item)}>-</button>
-                            </div>
-                        ))
-                    )
+                        }
+                        <SelectInput
+                            label="Employee"
+                            name="employees"
+                            list={employeesList.data.map(employee => ({ [employee.name + " " + employee.lastname]: employee.uid }))}
+                            value=""
+                            onChange={handleEmployeeChange}
+                        />
 
-                }
-                <SelectInput
-                    label="Employee"
-                    name="employees"
-                    list={employeesList.data.map(employee => employee.name + " " + employee.lastname)}
-                    onChange={handleEmployeeChange}
-                />
-
-            </div>
-            <button onClick={() => handleForm(collectionName)}>Criar</button>
+                    </div>
+                    <button onClick={() => handleForm(collectionName)}>Criar</button>
+                </>
+            }
 
             <h2>Contracts List</h2>
 
-            {
-                data.map((item, index) => (
-                    <div key={index}>
-                        <label><b>Client</b></label>
-                        <p>{item.client}</p>
-                        <br />
-                        <label><b>Service</b></label>
-                        <p>{item.service}</p>
-                        <br />
-                        <label><b>Frequency</b></label>
-                        <p>{item.frequency}</p>
-                        <br />
-                        <label><b>Employees</b></label>
-                        {item.employees?.map((employee, index) => (
-                            <p key={index}>{employee}</p>
-                        ))}
-                    </div>
-                ))
-            }
+            <table>
+                <thead>
+                    <tr>
+                        <td>Client</td>
+                        <td>Service</td>
+                        <td>Frequency</td>
+                        <td>Employees</td>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {contractList.map((item, index) => (
+                        <tr key={index}>
+                            <td >{item.client}</td>
+                            <td>{item.service}</td>
+                            <td>{item.frequency}</td>
+                            <td>
+                                {item.employees?.map((employee, index) => (
+                                    <p key={index}>{showEmployeeName(employee)}</p>
+                                ))}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </>
     )
 }

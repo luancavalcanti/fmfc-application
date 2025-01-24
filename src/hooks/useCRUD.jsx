@@ -34,6 +34,7 @@ export default function useCRUD(collectionName, formDefault = "") {
     async function handleForm(collectionName) {
         if (editing) {
             const docRef = doc(db, collectionName, formData.id)
+            console.log(docRef)
             await updateDoc(docRef, formData)
             await getData(collectionName)
             setFormData(formDefault)

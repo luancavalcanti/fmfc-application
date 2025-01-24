@@ -6,24 +6,46 @@ import Contracts from "./Contracts"
 import { UserContext } from "../context/UserContext"
 import Services from "./Services"
 import Comments from "./Comments"
+import UserPermissions from "./UserPermissons"
 
 export default function Login() {
-    const { signIn, login, logout, email, setEmail, senha, setSenha, user } = useContext(UserContext)
+    const { signIn, login, logout, email, setEmail, senha, setSenha, user, role } = useContext(UserContext)
+    console.log(role)
     return (
         user?.email
             ? (
-                <>
-                    <h2>{user.email}</h2>
-                    <button onClick={logout}>Logout</button>
-                    {/* <Employees />
-                    <Clients />
-                    <Services />
-                    <Contracts /> */}
-                    <Comments />
-                </>
+                role === "admin"
+                    ? (
+                        <>
+                            <p>{role}</p>
+                            <h2>{user.email}</h2>
+                            <button onClick={logout}>Logout</button>
+                            <UserPermissions />
+                            <Employees />
+                            <Clients />
+                            <Services />
+                            <Contracts uid={user.uid} role={role} />
+                            <Comments />
+                        </>
+                    )
+                    : (
+                        <>
+                            <button onClick={logout}>Logout</button>
+                            <h2>Usuario comum</h2>
+                            <Contracts uid={user.uid} role={role} />
+                        </>
+                    )
             )
             : (
                 <>
+                    {/* <TextInput
+                        label="Name"
+                        type="text"
+                        name="name"
+                        onChange={e => setDisplayName(e.target.value)}
+                        value={displayName}
+                    /> */}
+
                     <TextInput
                         label="E-mail"
                         type="email"

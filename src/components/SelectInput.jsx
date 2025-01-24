@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 export default function SelectInput(props) {
-    const { label, name, list, onChange } = props
+    const { label, name, list, value, onChange } = props
 
-    const [selectedValue, setSelectedValue] = useState(""); // Estado do valor selecionado
+    const [selectedValue, setSelectedValue] = useState(value); // Estado do valor selecionado
 
     const handleChange = (event) => {
         const selected = event.target.value;
@@ -15,7 +15,6 @@ export default function SelectInput(props) {
         }
         onChange(event)
     };
-
     return (
         <>
             <label>{label}</label>
@@ -28,8 +27,8 @@ export default function SelectInput(props) {
                     Select...
                 </option>
                 {list.map((name, index) => (
-                    <option key={index} value={name}>
-                        {name}
+                    <option key={index} value={typeof name === 'object' ? name[Object.keys(name)] : name}>
+                        {typeof name === 'object' ? Object.keys(name) : name}
                     </option>
                 ))}
             </select>
