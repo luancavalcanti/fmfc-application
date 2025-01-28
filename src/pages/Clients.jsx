@@ -1,6 +1,6 @@
 import DefaultCRUD from "../components/DefaultCRUD";
 
-export default function Clients() {
+export default function Clients(role) {
   const formDefaultClients = {
     name: "",
     location: "",
@@ -42,6 +42,7 @@ export default function Clients() {
       collectionName="clients"
       formObject={formObject}
       formDefault={formDefaultClients}
+      role={role}
     />
   );
 }

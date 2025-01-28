@@ -1,7 +1,7 @@
 import DefaultCRUD from "../components/DefaultCRUD"
 import useCRUD from "../hooks/useCRUD";
 
-export default function Employees() {
+export default function Employees(role) {
     const getCurrentDate = () => { const today = new Date(); return today.toISOString().split("T")[0]; };
     const users = useCRUD('userPermissions')
     const userValues = users.data.map(user => ({ [user.email]: user.uid }))
@@ -64,6 +64,7 @@ export default function Employees() {
             collectionName="employees"
             formObject={formObject}
             formDefault={formDefaultEmployees}
+            role={role}
         />
     )
 }

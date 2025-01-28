@@ -36,12 +36,12 @@ export default function DefaultCRUD(props) {
     return (
         <>
             <h1>{title}</h1>
-
+            {role?.role === "admin" && <button onClick={handleNewForm}>New {title}</button>}
             {
-                newForm && role === 'admin'(
+                newForm && (
                     <>
-                        <button onClick={handleNewForm}>New {title}</button>
-                        <h2>Employee Form</h2>
+
+                        <h2>{title} Form</h2>
                         {
                             formObject.map((object, index) => {
                                 const { label, type, list, name } = object

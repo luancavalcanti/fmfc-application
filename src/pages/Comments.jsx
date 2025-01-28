@@ -4,7 +4,7 @@ import { UserContext } from "../context/UserContext";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase-config";
 
-export default function Comments() {
+export default function Comments({ contractID }) {
     const [images, setImages] = useState(null);
     const [previewImages, setPreviewImages] = useState(null)
     const [showProgressBar, setShowProgressBar] = useState(false)
@@ -12,25 +12,24 @@ export default function Comments() {
     const { user } = useContext(UserContext)
     const collectionName = 'comments'
     const formDefault = {
-        contractID: "",
+        contractID: contractID,
         user: user.email,
         date: time,
         comment: "",
         images: []
     }
-
+    console.log(formDefault)
     const CRUD = useCRUD(collectionName, formDefault)
     const { formData, setFormData, data, handleForm } = CRUD
-    const contractsList = useCRUD('contracts')
-    const list = contractsList.data?.map(contract => (
-        {
-            id: contract.id,
-            client: contract.client,
-            service: contract.service,
-        }
-    )
-    )
-
+    // const contractsList = useCRUD('contracts')
+    // const list = contractsList.data?.map(contract => (
+    //     {
+    //         id: contract.id,
+    //         client: contract.client,
+    //         service: contract.service,
+    //     }
+    // )
+    // )
     function handleChange(e) {
         const { name, value } = e.target
         setFormData(prevState => ({
@@ -41,12 +40,13 @@ export default function Comments() {
     const comments = data.sort((a, b) => new Date(a.date) - new Date(b.date)) //Order comments by date
     const commentsList = comments.map(comment => (
         {
+            contractID: comment.contractID,
             user: comment.user,
             comment: comment.comment,
             images: comment.images
         }
     ))
-
+    const commentsListFiltered = commentsList.filter(comment => comment.contractID === contractID)
     function handleImageChange(e) {
         const files = Array.from(e.target.files)
         setImages(files)
@@ -55,7 +55,7 @@ export default function Comments() {
 
 
     async function handleSubmit() {
-        if (images.length > 0) {
+        if (images?.length > 0) {
             setShowProgressBar(true)
             const uploadPromises = images.map(async (image, index) => {
                 const fileName = index + "_" + time.replace(/[^a-zA-Z0-9]/g, '') + "." + image.name.substring(image.name.lastIndexOf('.') + 1)
@@ -70,6 +70,9 @@ export default function Comments() {
                 images: imageUrls
             }))
         } else {
+            setFormData(prevState => ({
+                ...prevState,
+            }))
             handleForm(collectionName)
         }
 
@@ -84,16 +87,21 @@ export default function Comments() {
     }, [formData.images]);
 
     return (
+        contractID &&
         <>
             <h1>Comments</h1>
-            <label>Contract</label>
-            <select defaultValue={formData.contractID} onChange={handleChange} name="contractID">
-                <option value="" disabled>Select...</option>
-                {list.map((item, index) => (
-                    <option value={item.id} key={index}>{item.client + " - " + item.service}</option>
-                ))}
-            </select>
-            <br />
+            <h2>Comments List</h2>
+            {
+                commentsListFiltered.map((comment, index) => (
+                    <div key={index}>
+                        <h3>{comment.user.split("@", 1)}: </h3>
+                        <p>{comment.comment}</p>
+                        {comment.images?.map((image, index) => (
+                            <img key={index} src={image} alt="Image" style={{ width: "300px", borderRadius: "20px", padding: "5px" }} />
+                        ))}
+                    </div>
+                ))
+            }
             <label>Comment</label>
             <textarea onChange={handleChange} name="comment" value={formData.comment}></textarea>
             <br />
@@ -105,18 +113,7 @@ export default function Comments() {
             {showProgressBar && <progress value={null} />}
             <br />
             <button onClick={handleSubmit}>Add Comment</button>
-            <h2>Comments List</h2>
-            {
-                commentsList.map((comment, index) => (
-                    <div key={index}>
-                        <h3>{comment.user.split("@", 1)}: </h3>
-                        <p>{comment.comment}</p>
-                        {comment.images?.map((image, index) => (
-                            <img key={index} src={image} alt="Image" style={{ width: "300px", borderRadius: "20px", padding: "5px" }} />
-                        ))}
-                    </div>
-                ))
-            }
+
 
         </>
     )

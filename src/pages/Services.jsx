@@ -1,6 +1,6 @@
 import DefaultCRUD from "../components/DefaultCRUD"
 
-export default function Services() {
+export default function Services(role) {
     const formDefaultServices = {
         desc: ""
     }
@@ -17,6 +17,7 @@ export default function Services() {
             collectionName="services"
             formObject={formObjectServices}
             formDefault={formDefaultServices}
+            role={role}
         />
 
     )

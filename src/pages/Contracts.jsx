@@ -1,5 +1,7 @@
+import { useState } from "react"
 import SelectInput from "../components/SelectInput"
 import useCRUD from "../hooks/useCRUD"
+import Comments from "./Comments"
 
 export default function Contracts({ uid, role }) {
     const formDefault = {
@@ -12,6 +14,7 @@ export default function Contracts({ uid, role }) {
     const collectionName = 'contracts'
     const CRUD = useCRUD(collectionName, formDefault)
     const { data, formData, setFormData, handleForm } = CRUD
+    const [contractID, setContractID] = useState('')
     let contractList = data
     const contractFilteredList = data?.filter(contract => contract.employees.includes(uid));
     const frequencies = ['Daily', 'Weekly', 'Biweekly', 'Monthly', 'Quarterly', 'Semiannually', 'Annually']
@@ -22,7 +25,6 @@ export default function Contracts({ uid, role }) {
     if (role !== 'admin') {
         contractList = contractFilteredList
     }
-    console.log(contractList)
     function handleEmployeeChange(e) {
         const { value } = e.target
         if (!employeesArray.includes(value)) {
@@ -57,7 +59,10 @@ export default function Contracts({ uid, role }) {
         const employeeName = `${filteredEmployee.name} ${filteredEmployee.lastname}`
         return employeeName
     }
-    // console.log(employeesArray)
+
+    function handleComment(contractID) {
+        setContractID(contractID)
+    }
     return (
         <>
             <h1>Contracts</h1>
@@ -126,6 +131,7 @@ export default function Contracts({ uid, role }) {
                         <td>Service</td>
                         <td>Frequency</td>
                         <td>Employees</td>
+                        <td>Action</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -140,10 +146,12 @@ export default function Contracts({ uid, role }) {
                                     <p key={index}>{showEmployeeName(employee)}</p>
                                 ))}
                             </td>
+                            <td><button onClick={() => handleComment(item.id)}>Comments</button></td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            {contractID && <Comments contractID={contractID} />}
         </>
     )
 }

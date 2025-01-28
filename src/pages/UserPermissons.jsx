@@ -1,8 +1,7 @@
 import DefaultCRUD from "../components/DefaultCRUD"
 
-export default function UserPermissions() {
-    const role = ["user", "admin", "new"]
-    // console.log(Object.keys(role))
+export default function UserPermissions(role) {
+    const roleList = ["user", "admin", "new"]
     const formDefaultEmployees = {
         email: "",
         role: ""
@@ -17,7 +16,7 @@ export default function UserPermissions() {
         {
             label: "Role",
             type: "select",
-            list: role,
+            list: roleList,
             name: "role",
         },
     ]
@@ -27,6 +26,7 @@ export default function UserPermissions() {
             collectionName="userPermissions"
             formObject={formObject}
             formDefault={formDefaultEmployees}
+            role={role}
         />
     )
 }
