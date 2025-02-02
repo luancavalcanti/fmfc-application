@@ -1,52 +1,55 @@
 /* eslint-disable react/prop-types */
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { auth, db } from "../firebase-config";
 import { addDoc, collection } from "firebase/firestore";
-import useCRUD from "../hooks/useCRUD";
+import useGetData from "../hooks/useGetData";
 
 export const UserContext = createContext()
 
 export function UserProvider({ children }) {
   const [email, setEmail] = useState('')
-  const [senha, setSenha] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState({})
-  const { data } = useCRUD('userPermissions')
+  const { data } = useGetData('userPermissions')
   const [role, setRole] = useState(localStorage.getItem('userRole') || '')
-  const userFiltered = (data.filter(data => data.uid === user.uid)[0])
-  //verificar se existe um usuário logando quando a página for carregada pela primeira vez
+  const userFiltered = useMemo(() => {
+    return data.find(data => data.uid === user?.uid);
+  }, [data, user]);
+  // //check if there is a user logging in when the page is first loaded
+  // //if there is, set the user and role states
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (user) setUser(user)
-      if (userFiltered) {
-        setRole(userFiltered.role)
-        localStorage.setItem('userRole', userFiltered.role); // Armazena o role no localStorage
-      }
+      setUser(user);
     })
-  }, [email])
 
-  function signIn(e) {
-    e.preventDefault()
-    createUserWithEmailAndPassword(auth, email, senha)
+  }, []);
+
+  useEffect(() => {
+    if (user && userFiltered) {
+      setRole(userFiltered.role);
+      localStorage.setItem('userRole', userFiltered.role);
+    }
+  }, [user, userFiltered]);
+
+  function signIn() {
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        setUser(userCredential.user)
+        setUser(userCredential?.user)
         const userPerms = ({
           uid: userCredential.user.uid,
           email: userCredential.user.email,
           role: "new"
         })
         addDoc(collection(db, 'userPermissions'), userPerms)
-        // updateProfile(user, {
-        //   displayName: displayName
-        // });
         setEmail('')
-        setSenha('')
+        setPassword('')
       })
       .catch((error) => {
         console.log(error.code)
         switch (error.code) {
           case "auth/email-already-in-use":
-            alert('usuário já cadastrado')
+            alert('User already exists')
             break;
 
           default:
@@ -54,21 +57,19 @@ export function UserProvider({ children }) {
         }
       })
   }
-
-  function login(e) {
-    e.preventDefault()
-    signInWithEmailAndPassword(auth, email, senha)
+  function login() {
+    signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         setUser(auth.currentUser)
         setEmail('')
-        setSenha('')
+        setPassword('')
 
       })
       .catch((error) => {
         console.log(error.code)
         switch (error.code) {
           case 'auth/invalid-credential':
-            alert('Usuário não encontrado')
+            alert('User not found')
             break;
 
           default:
@@ -76,14 +77,12 @@ export function UserProvider({ children }) {
         }
       })
   }
-
   function logout() {
     signOut(auth)
       .then(() => {
-        console.log('Usuário deslogado')
         setUser({})
         setEmail('')
-        setSenha('')
+        setPassword('')
         setRole('')
         localStorage.removeItem('userRole');
       })
@@ -97,10 +96,9 @@ export function UserProvider({ children }) {
       login,
       logout,
       email, setEmail,
-      senha, setSenha,
+      password, setPassword,
       user, setUser,
       role,
-      // displayName, setDisplayName
     }}>
       {children}
     </UserContext.Provider>

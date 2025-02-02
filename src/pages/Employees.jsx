@@ -1,11 +1,12 @@
-import DefaultCRUD from "../components/DefaultCRUD"
-import useCRUD from "../hooks/useCRUD";
+import CreateTable from "../components/CreateTable";
+import useGetData from "../hooks/useGetData";
 
-export default function Employees(role) {
+export default function Employees() {
     const getCurrentDate = () => { const today = new Date(); return today.toISOString().split("T")[0]; };
-    const users = useCRUD('userPermissions')
-    const userValues = users.data.map(user => ({ [user.email]: user.uid }))
-    const formDefaultEmployees = {
+    const { data } = useGetData('userPermissions')
+    const userList = data.map(user => user.email)
+    const userValues = data.map(user => user.uid)
+    const employeesDefaultValues = {
         uid: "",
         name: "",
         lastname: "",
@@ -15,11 +16,12 @@ export default function Employees(role) {
         dob: "",
         dateIn: getCurrentDate()
     }
-    const formObject = [
+    const employeesFields = [
         {
             label: "User",
             type: "select",
-            list: userValues,
+            list: userList,
+            listValues: userValues,
             name: "uid",
         },
         {
@@ -28,7 +30,7 @@ export default function Employees(role) {
             name: "name",
         },
         {
-            label: "Lastname",
+            label: "Last Name",
             type: "text",
             name: "lastname",
         },
@@ -58,13 +60,16 @@ export default function Employees(role) {
             name: "dateIn",
         },
     ]
+
+    const props = {
+        fields: employeesFields,
+        defaultValues: employeesDefaultValues,
+        collectionName: 'employees'
+    }
+
     return (
-        <DefaultCRUD
-            title="Employees"
-            collectionName="employees"
-            formObject={formObject}
-            formDefault={formDefaultEmployees}
-            role={role}
-        />
+        <div>
+            <CreateTable {...props} />
+        </div>
     )
 }

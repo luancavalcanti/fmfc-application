@@ -1,24 +1,25 @@
-import DefaultCRUD from "../components/DefaultCRUD"
+import CreateTable from "../components/CreateTable"
 
-export default function Services(role) {
-    const formDefaultServices = {
+export default function Services() {
+    const servicesDefaultValues = {
         desc: ""
     }
-    const formObjectServices = [
+    const servicesFields = [
         {
             label: "Description",
             type: "text",
             name: "desc"
         }
     ]
-    return (
-        <DefaultCRUD
-            title="Services"
-            collectionName="services"
-            formObject={formObjectServices}
-            formDefault={formDefaultServices}
-            role={role}
-        />
 
+    const props = {
+        fields: servicesFields,
+        defaultValues: servicesDefaultValues,
+        collectionName: 'services'
+    }
+    return (
+        <div>
+            <CreateTable {...props} />
+        </div>
     )
 }

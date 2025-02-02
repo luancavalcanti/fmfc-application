@@ -1,68 +1,51 @@
-import { useContext } from "react"
-import Employees from "./Employees"
-import Clients from "./Clients"
-import TextInput from "../components/TextInput"
-import Contracts from "./Contracts"
+import { useContext, useState } from "react"
+import TextField from "../components/TextField"
 import { UserContext } from "../context/UserContext"
-import Services from "./Services"
-import UserPermissions from "./UserPermissons"
+import { useNavigate } from "react-router-dom"
+import SelectField from "../components/SelectField"
 
 export default function Login() {
-    const { signIn, login, logout, email, setEmail, senha, setSenha, user, role } = useContext(UserContext)
-    if (user?.email) {
-        switch (role) {
-            case 'admin':
-                return (
-                    <>
-                        <p>{role}</p>
-                        <h2>{user.email}</h2>
-                        <button onClick={logout}>Logout</button>
-                        <UserPermissions />
-                        <Employees role={role} />
-                        <Clients role={role} />
-                        <Services role={role} />
-                        <Contracts uid={user.uid} role={role} />
-                    </>
-                )
-            case 'user':
-                return (
-                    <>
-                        <p>{role}</p>
-                        <h2>{user.email}</h2>
-                        <button onClick={logout}>Logout</button>
-                        <Contracts uid={user.uid} role={role} />
-                    </>
-                )
-            case 'new':
-                return (
-                    <>
-                        <p>{role}</p>
-                        <h2>{user.email}</h2>
-                        <button onClick={logout}>Logout</button>
-                        <h2>You need permissions</h2>
-                    </>
-                )
-        }
-    } else {
-        return (
-            <>
-                <TextInput
+    const { signIn, login, email, setEmail, password, setPassword } = useContext(UserContext)
+    const navigate = useNavigate()
+    const [selectedValue, setSelectedValue] = useState('')
+    console.log(selectedValue)
+    function handleLogin() {
+        login()
+        navigate('/home')
+    }
+    return (
+        <>
+            <div>
+                <TextField
                     label="E-mail"
                     type="email"
                     name="email"
                     onChange={e => setEmail(e.target.value)}
                     value={email}
                 />
-                <TextInput
+            </div>
+            <div>
+                <TextField
                     label="Password"
                     type="password"
-                    name="senha"
-                    onChange={e => setSenha(e.target.value)}
-                    value={senha}
+                    name="password"
+                    onChange={e => setPassword(e.target.value)}
+                    value={password}
                 />
-                <button onClick={login}>Login</button>
+            </div>
+            <br />
+            <div>
+                <button onClick={handleLogin}>Login</button>
                 <button onClick={signIn}>Register user</button>
-            </>
-        )
-    }
+            </div>
+            <SelectField
+                label="Test"
+                list={["a", "b", "c"]}
+                listValues={["1", "2", "3"]}
+                add={true}
+                onChange={(values) => setSelectedValue(values)}
+            />
+        </>
+    )
+
 }

@@ -1,6 +1,4 @@
-/* eslint-disable react/prop-types */
-export default function TextInput(props) {
-    const { label, type, name, value, onChange } = props
+export default function TextField({ label, type, name, value, onChange }) {
     return (
         <>
             <label>{label}</label>

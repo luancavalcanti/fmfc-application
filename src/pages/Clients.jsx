@@ -1,14 +1,14 @@
-import DefaultCRUD from "../components/DefaultCRUD";
+import CreateTable from "../components/CreateTable";
 
-export default function Clients(role) {
-  const formDefaultClients = {
+export default function Clients() {
+  const clientsDefaultValues = {
     name: "",
     location: "",
     phone: "",
     email: "",
     responsible: "",
   }
-  const formObject = [
+  const clientsFields = [
     {
       label: "Name",
       type: "text",
@@ -35,14 +35,16 @@ export default function Clients(role) {
       name: "responsible",
     },
   ];
+  const props = {
+    fields: clientsFields,
+    defaultValues: clientsDefaultValues,
+    collectionName: 'clients'
+  }
 
   return (
-    <DefaultCRUD
-      title="Clients"
-      collectionName="clients"
-      formObject={formObject}
-      formDefault={formDefaultClients}
-      role={role}
-    />
+    <div>
+      <CreateTable {...props} />
+    </div>
+
   );
 }

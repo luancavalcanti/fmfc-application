@@ -1,157 +1,57 @@
-import { useState } from "react"
-import SelectInput from "../components/SelectInput"
-import useCRUD from "../hooks/useCRUD"
-import Comments from "./Comments"
+import useGetData from "../hooks/useGetData"
 
-export default function Contracts({ uid, role }) {
+export default function Contracts() {
+    const { data: clients } = useGetData('clients')
+    const { data: services } = useGetData('services')
+    const { data: employees } = useGetData('employees')
+
+    const clientsList = (clients?.map(client => client.name))
+    const servicesList = (services?.map(service => service.desc))
+    const employeesList = employees?.map(employee => ([`${employee.name} ${employee.lastname}`]));
+    const employeesListValues = employees?.map(employee => ([employee.id]));
     const formDefault = {
-        employees: [],
         client: "",
         service: "",
-        frequency: ""
+        frequency: "",
+        employeesID: [],
     }
-
-    const collectionName = 'contracts'
-    const CRUD = useCRUD(collectionName, formDefault)
-    const { data, formData, setFormData, handleForm } = CRUD
-    const [contractID, setContractID] = useState('')
-    let contractList = data
-    const contractFilteredList = data?.filter(contract => contract.employees.includes(uid));
-    const frequencies = ['Daily', 'Weekly', 'Biweekly', 'Monthly', 'Quarterly', 'Semiannually', 'Annually']
-    const employeesList = useCRUD('employees')
-    const clientList = useCRUD('clients')
-    const serviceList = useCRUD('services')
-    let employeesArray = formData.employees
-    if (role !== 'admin') {
-        contractList = contractFilteredList
-    }
-    function handleEmployeeChange(e) {
-        const { value } = e.target
-        if (!employeesArray.includes(value)) {
-            employeesArray = [...employeesArray, value];
-            setFormData(prevState => ({
-                ...prevState,
-                employees: employeesArray
-            }))
-        } else {
-            alert('Employee already in list')
-        }
-
-    }
-
-    function handleChange(e) {
-        const { name, value } = e.target
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value
-        }))
-    }
-
-    function removeEmployee(employee) {
-        setFormData(prevState => ({
-            ...prevState,
-            employees: employeesArray.filter((name) => name !== employee)
-        }))
-    }
-
-    function showEmployeeName(uid) {
-        const filteredEmployee = employeesList.data.filter(employee => employee.uid === uid)[0]
-        const employeeName = `${filteredEmployee.name} ${filteredEmployee.lastname}`
-        return employeeName
-    }
-
-    function handleComment(contractID) {
-        setContractID(contractID)
-    }
+    const formObject = [
+        {
+            label: "Client",
+            type: "select",
+            list: clientsList,
+            name: "client",
+        },
+        {
+            label: "Service",
+            type: "select",
+            list: servicesList,
+            name: "service",
+        },
+        {
+            label: "Frequency",
+            type: "select",
+            list: ['Daily', 'Weekly', 'Biweekly', 'Monthly', 'Quarterly', 'Semiannually', 'Annually'],
+            name: "frequency",
+        },
+        {
+            label: "Employees",
+            type: "select",
+            list: employeesList,
+            listValues: employeesListValues,
+            name: "employeesID",
+            add: true,
+        },
+    ]
     return (
         <>
-            <h1>Contracts</h1>
-            {role === 'admin' &&
-                <>
-                    <div>
-                        <SelectInput
-                            label="Client"
-                            name="client"
-                            list={clientList.data.map(client => client.name)}
-                            value={formData.client}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div>
-                        <SelectInput
-                            label="Services"
-                            name="service"
-                            list={serviceList.data.map(service => service.desc)}
-                            value={formData.service}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div>
-                        <SelectInput
-                            label="Frequency"
-                            name="frequency"
-                            list={frequencies}
-                            value={formData.frequency}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div>
 
-                        {
-                            employeesArray.length > 0
-                            && (
-                                employeesArray.map((item, index) => (
-                                    <div key={index}>
-                                        <label>{showEmployeeName(item)}</label>
-                                        <button onClick={() => removeEmployee(item)}>-</button>
-                                    </div>
-                                ))
-                            )
-
-                        }
-                        <SelectInput
-                            label="Employee"
-                            name="employees"
-                            list={employeesList.data.map(employee => ({ [employee.name + " " + employee.lastname]: employee.uid }))}
-                            value=""
-                            onChange={handleEmployeeChange}
-                        />
-
-                    </div>
-                    <button onClick={() => handleForm(collectionName)}>Criar</button>
-                </>
-            }
-
-            <h2>Contracts List</h2>
-
-            <table>
-                <thead>
-                    <tr>
-                        <td>Client</td>
-                        <td>Service</td>
-                        <td>Frequency</td>
-                        <td>Employees</td>
-                        <td>Action</td>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    {contractList.map((item, index) => (
-                        <tr key={index}>
-                            <td >{item.client}</td>
-                            <td>{item.service}</td>
-                            <td>{item.frequency}</td>
-                            <td>
-                                {item.employees?.map((employee, index) => (
-                                    <p key={index}>{showEmployeeName(employee)}</p>
-                                ))}
-                            </td>
-                            <td><button onClick={() => handleComment(item.id)}>Comments</button></td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            {contractID && <Comments contractID={contractID} />}
         </>
+        // <DefaultCRUD
+        //     collectionName="contracts"
+        //     formDefault={formDefault}
+        //     formObject={formObject}
+        //     title="Contracts"
+        // />
     )
 }
