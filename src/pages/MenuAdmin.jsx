@@ -13,9 +13,11 @@ export default function MenuAdmin() {
         border: '1px solid black',
         padding: '10px',
         margin: '10px',
+        backgroundColor: "grey",
+        borderRadius: "10px"
     }
     return (
-        <div>
+        <div >
             <div style={tempStyle}>
                 <h2>UserPermissions</h2>
                 <p>{userPermissions.length}</p>

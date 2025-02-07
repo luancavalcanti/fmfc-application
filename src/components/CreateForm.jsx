@@ -1,8 +1,9 @@
 import useCreateData from "../hooks/useCreateData"
+import MultipleSelectField from "./MultipleSelectField"
 import SelectField from "./SelectField"
 import TextField from "./TextField"
 
-export default function CreateForm({ fields, defaultValues, collectionName, onCreate, cancel }) {
+export default function CreateForm({ fields, defaultValues, collectionName, onCreate, viewUpdate }) {
 
     const { handleInsert, setFormData, formData } = useCreateData(collectionName, defaultValues, onCreate)
     function handleChange(e) {
@@ -20,17 +21,27 @@ export default function CreateForm({ fields, defaultValues, collectionName, onCr
                     const { label, type, name, list, listValue, add } = field
                     if (list) {
                         return (
-                            <div key={index}>
-                                <SelectField
-                                    label={label}
-                                    name={name}
-                                    list={list}
-                                    value={formData[name]}
-                                    listValues={listValue}
-                                    onChange={handleChange}
-                                    add={add}
-                                />
-                            </div>
+                            !add
+                                ? (<div key={index}>
+                                    <SelectField
+                                        label={label}
+                                        name={name}
+                                        list={list}
+                                        value={formData[name]}
+                                        listValues={listValue}
+                                        onChange={handleChange}
+                                    />
+                                </div>)
+                                : (<div key={index}>
+                                    <MultipleSelectField
+                                        label={label}
+                                        name={name}
+                                        list={list}
+                                        value={formData[name]}
+                                        listValues={listValue}
+                                        onChange={handleChange}
+                                    />
+                                </div>)
                         )
                     } else {
                         return (
@@ -49,7 +60,7 @@ export default function CreateForm({ fields, defaultValues, collectionName, onCr
                 })
             }
             <button onClick={handleInsert}>Create</button>
-            <button onClick={() => cancel(false)}>Cancel</button>
+            <button onClick={() => viewUpdate()}>Cancel</button>
         </>
 
     )

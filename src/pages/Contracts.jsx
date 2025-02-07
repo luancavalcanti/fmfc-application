@@ -1,21 +1,27 @@
 import useGetData from "../hooks/useGetData"
+import CreateTable from "../components/CreateTable"
+import CreateForm from "../components/CreateForm"
+import CreateUpdate from "../components/CreateUpdate"
+import useShowController from "../hooks/useShowController"
 
 export default function Contracts() {
     const { data: clients } = useGetData('clients')
     const { data: services } = useGetData('services')
     const { data: employees } = useGetData('employees')
+    const { data, getData } = useGetData('contracts')
+    const { viewUpdate, showEdit, showForm, setShowForm, id } = useShowController()
 
     const clientsList = (clients?.map(client => client.name))
     const servicesList = (services?.map(service => service.desc))
     const employeesList = employees?.map(employee => ([`${employee.name} ${employee.lastname}`]));
-    const employeesListValues = employees?.map(employee => ([employee.id]));
-    const formDefault = {
+
+    const contractsDefaultValues = {
         client: "",
         service: "",
         frequency: "",
-        employeesID: [],
+        employees: [],
     }
-    const formObject = [
+    const contractFields = [
         {
             label: "Client",
             type: "select",
@@ -38,20 +44,37 @@ export default function Contracts() {
             label: "Employees",
             type: "select",
             list: employeesList,
-            listValues: employeesListValues,
-            name: "employeesID",
+            name: "employees",
             add: true,
         },
     ]
     return (
         <>
-
+            <br />
+            <br />
+            <button onClick={() => setShowForm(!showForm)}>New</button>
+            {showForm && <CreateForm
+                defaultValues={contractsDefaultValues}
+                fields={contractFields}
+                collectionName={'contracts'}
+                data={data}
+                onCreate={getData}
+                viewUpdate={viewUpdate}
+            />}
+            <CreateTable
+                defaultValues={contractsDefaultValues}
+                data={data}
+                viewUpdate={viewUpdate}
+            />
+            {showEdit &&
+                <CreateUpdate
+                    id={id}
+                    viewUpdate={viewUpdate}
+                    collectionName={'contracts'}
+                    fields={contractFields}
+                    onUpdate={getData}
+                />
+            }
         </>
-        // <DefaultCRUD
-        //     collectionName="contracts"
-        //     formDefault={formDefault}
-        //     formObject={formObject}
-        //     title="Contracts"
-        // />
     )
 }

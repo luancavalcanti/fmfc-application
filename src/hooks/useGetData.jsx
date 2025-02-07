@@ -5,11 +5,7 @@ import { db } from "../firebase-config"
 export default function useGetData(collectionName) {
     const [data, setData] = useState([])
 
-    useEffect(() => {
-        getData(collectionName)
-    }, [collectionName])
-
-    const getData = useCallback(async (collectionName) => {
+    const getData = useCallback(async () => {
         try {
             const docRef = collection(db, collectionName)
             const dataSnapshot = await getDocs(docRef)
@@ -23,7 +19,11 @@ export default function useGetData(collectionName) {
         } catch (error) {
             console.log(error)
         }
-    }, [])
+    }, [collectionName])
+
+    useEffect(() => {
+        getData()
+    }, [getData])
 
     return {
         data, setData,

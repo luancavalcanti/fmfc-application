@@ -1,4 +1,10 @@
-export default function TextField({ label, type, name, value, onChange }) {
+export default function TextField({
+    label,
+    type,
+    name,
+    value,
+    onChange
+}) {
     return (
         <>
             <label>{label}</label>

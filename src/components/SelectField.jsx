@@ -3,7 +3,7 @@ export default function SelectField({
     name,
     list,
     listValues,
-    value = "",
+    value,
     onChange,
 }) {
     return (
@@ -15,13 +15,11 @@ export default function SelectField({
                 onChange={onChange}
             >
                 <option value="" disabled>Select... </option>
-                {
-                    list.map((option, index) => (
-                        <option key={index} value={listValues ? listValues[index] : value}>
-                            {option}
-                        </option>
-                    ))
-                }
+                {list.map((option, index) => (
+                    <option key={index} value={listValues ? listValues[index] : option}>
+                        {option}
+                    </option>
+                ))}
             </select>
         </>
     )
