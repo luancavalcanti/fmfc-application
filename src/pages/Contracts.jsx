@@ -42,10 +42,9 @@ export default function Contracts() {
         },
         {
             label: "Employees",
-            type: "select",
+            type: "multipleSelect",
             list: employeesList,
             name: "employees",
-            add: true,
         },
     ]
     return (

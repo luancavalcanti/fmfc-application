@@ -1,8 +1,8 @@
 import { useContext } from "react"
 import { UserContext } from "../context/UserContext"
 import { useNavigate } from "react-router-dom"
-import Contracts from "./Contracts"
 import MenuAdmin from "./MenuAdmin"
+import MenuUser from "./MenuUser"
 
 export default function Home() {
     const { user, role } = useContext(UserContext)
@@ -14,7 +14,7 @@ export default function Home() {
                 <>
                     <h1>Home</h1>
                     {role === 'new' && <p>You need permissions to access this page.</p>}
-                    {role === 'user' && (<Contracts uid={user.uid} role={role} />)}
+                    {role === 'user' && (<MenuUser userEmail={user.email} />)}
                     {role === 'admin' && (<MenuAdmin />)}
                 </>
             )

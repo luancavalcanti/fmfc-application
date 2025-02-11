@@ -3,12 +3,13 @@ export default function TextField({
     type,
     name,
     value,
+    hidden,
     onChange
 }) {
     return (
         <>
-            <label>{label}</label>
-            <input type={type} name={name} value={value} onChange={onChange} />
+            <label hidden={hidden}>{label}</label>
+            <input type={type} name={name} value={value} onChange={onChange} hidden={hidden} />
         </>
     )
 }

@@ -4,15 +4,17 @@ export default function SelectField({
     list,
     listValues,
     value,
+    hidden,
     onChange,
 }) {
     return (
         <>
-            <label>{label}</label>
+            <label hidden={hidden}>{label}</label>
             <select
                 name={name}
                 value={value}
                 onChange={onChange}
+                hidden={hidden}
             >
                 <option value="" disabled>Select... </option>
                 {list.map((option, index) => (

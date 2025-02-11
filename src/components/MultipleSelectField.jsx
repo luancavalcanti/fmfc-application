@@ -3,12 +3,12 @@ import { useState } from "react"
 export default function MultipleSelectField({
     label,
     name,
-    values,
+    value,
     list,
+    hidden,
     onChange,
 }) {
-    const [arrayValues, setArrayValues] = useState(values || [""])
-
+    const [arrayValues, setArrayValues] = useState(value || [""])
     function handleChange(e, index) {
         const { name, value } = e.target
         arrayValues[index] = value
@@ -28,11 +28,12 @@ export default function MultipleSelectField({
         <>
             {arrayValues.map((_, index) => (
                 <div key={index}>
-                    <label>{label}</label>
+                    <label hidden={hidden}>{label}</label>
                     <select
                         name={name}
                         value={arrayValues[index]}
                         onChange={(e) => handleChange(e, index)}
+                        hidden={hidden}
                     >
                         <option value="" disabled>Select... </option>
                         {list.map((option, index) => (

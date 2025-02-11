@@ -10,6 +10,10 @@ import Employees from "./pages/Employees";
 import Clients from "./pages/Clients";
 import Services from "./pages/Services";
 import Contracts from "./pages/Contracts";
+import Complaints from "./pages/Complaints";
+import Status from "./pages/Status";
+import MenuComplaints from "./pages/MenuComplaints";
+import Complaint from "./pages/complaint";
 
 function App() {
   return (
@@ -26,6 +30,10 @@ function App() {
               <Route path="admin/clients" element={<Clients />} />
               <Route path="admin/services" element={<Services />} />
               <Route path="admin/contracts" element={<Contracts />} />
+              <Route path="admin/complaints" element={<Complaints />} />
+              <Route path="admin/status" element={<Status />} />
+              <Route path="complaints" element={<MenuComplaints />} />
+              <Route path="complaints/complaint" element={<Complaint />} />
             </Route>
           </Routes>
         </BrowserRouter>

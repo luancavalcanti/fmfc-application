@@ -5,11 +5,13 @@ import useDeleteData from "../hooks/useDeleteData"
 import SelectField from "./SelectField"
 import TextField from "./TextField"
 import MultipleSelectField from "./MultipleSelectField"
+import TextareaField from "./TextareaField"
+import FileField from "./FileField"
 
 export default function CreateUpdate({ id, viewUpdate, collectionName, fields, onUpdate }) {
     const { data } = useGetData(collectionName)
     const dataToUpdate = data.filter(item => item.id === id)[0]
-    const { updateData, setUpdateData, handleUpdate } = useUpdateData(collectionName, dataToUpdate, viewUpdate, onUpdate)
+    const { updateData, setUpdateData, handleUpdate, setImages } = useUpdateData(collectionName, dataToUpdate, viewUpdate, onUpdate)
     const { handleRemove } = useDeleteData(collectionName, viewUpdate, onUpdate)
 
     useEffect(() => {
@@ -25,12 +27,54 @@ export default function CreateUpdate({ id, viewUpdate, collectionName, fields, o
             [name]: value
         }))
     }
+    const componentMap = {
+        select: SelectField,
+        multipleSelect: MultipleSelectField,
+        text: TextField,
+        date: TextField,
+        email: TextField,
+        password: TextField,
+        color: TextField,
+        textarea: TextareaField,
+        file: FileField
+    }
+    function handleRemoveFile(file) {
+        const imagesFiltered = updateData.images.filter(image => image !== file)
+        setUpdateData(prev => ({
+            ...prev,
+            images: imagesFiltered
+        }))
+    }
+
     return (
         <>
             <h1>Edit</h1>
-            {
-                updateData &&
+            {updateData &&
                 fields.map((field, index) => {
+                    const { label, type, name, list } = field
+                    const Component = componentMap[type];
+                    return <div key={index}>
+                        <Component
+                            label={label}
+                            type={type}
+                            name={name}
+                            list={list}
+                            setImages={setImages}
+                            value={type === 'file' ? '' : updateData[name]}
+                            onChange={handleChange}
+                        // hidden={hidden}
+                        />
+                        {type === 'file' && updateData?.images.map((image, index) => (
+                            <div key={index}>
+                                <img src={image} style={{ width: "100px", borderRadius: "10px", padding: "5px" }} />
+                                <button onClick={() => handleRemoveFile(image)}>x</button>
+                            </div>
+                        ))}
+                    </div>
+
+                })
+
+                /* fields.map((field, index) => {
                     const { label, name, type, list, listValues, add } = field
                     if (list) {
                         return <div key={index}>
@@ -76,7 +120,7 @@ export default function CreateUpdate({ id, viewUpdate, collectionName, fields, o
                             </div>
                         )
                     }
-                })
+                }) */
             }
             <button onClick={handleUpdate}>Update</button>
             <button onClick={() => viewUpdate()}>Cancel</button>

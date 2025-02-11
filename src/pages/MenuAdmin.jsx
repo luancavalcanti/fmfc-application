@@ -7,6 +7,8 @@ export default function MenuAdmin() {
     const { data: clients } = useGetData('clients')
     const { data: services } = useGetData('services')
     const { data: contracts } = useGetData('contracts')
+    const { data: complaints } = useGetData('complaints')
+    const { data: status } = useGetData('status')
 
     const navigate = useNavigate()
     const tempStyle = {
@@ -42,6 +44,16 @@ export default function MenuAdmin() {
                 <h2>Contracts</h2>
                 <p>{contracts.length}</p>
                 <button onClick={() => navigate('admin/contracts')}>View</button>
+            </div>
+            <div style={tempStyle}>
+                <h2>Complaints</h2>
+                <p>{complaints.length}</p>
+                <button onClick={() => navigate('admin/complaints')}>View</button>
+            </div>
+            <div style={tempStyle}>
+                <h2>Status</h2>
+                <p>{status.length}</p>
+                <button onClick={() => navigate('admin/status')}>View</button>
             </div>
         </div>
     )

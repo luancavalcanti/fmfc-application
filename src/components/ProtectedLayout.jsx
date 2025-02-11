@@ -1,10 +1,11 @@
 import { useContext } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
 export default function ProtectedLayout() {
     const { logout, user, role } = useContext(UserContext);
     const navigate = useNavigate();
+    const location = useLocation();
     function handleLogout() {
         logout();
         navigate('/login');
@@ -16,8 +17,11 @@ export default function ProtectedLayout() {
                 <p>role: {role}</p>
                 <h2>user: {user.email}</h2>
                 <button onClick={handleLogout}>Logout</button>
+                <button onClick={() => navigate('/home')}>Home</button>
                 <Outlet />
-                <button onClick={() => navigate('/home')}>Back</button>
+                {location.pathname !== '/home' && (
+                    <button onClick={() => navigate(-1)}>Back</button>
+                )}
             </>
             :
             <>
