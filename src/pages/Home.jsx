@@ -1,8 +1,7 @@
 import { useContext } from "react"
 import { UserContext } from "../context/UserContext"
 import { useNavigate } from "react-router-dom"
-import MenuAdmin from "./MenuAdmin"
-import MenuUser from "./MenuUser"
+import MenuClients from "./MenuClients"
 
 export default function Home() {
     const { user, role } = useContext(UserContext)
@@ -12,10 +11,17 @@ export default function Home() {
         user
             ? (
                 <>
-                    <h1>Home</h1>
+                    {/* <h1>Home</h1> */}
                     {role === 'new' && <p>You need permissions to access this page.</p>}
-                    {role === 'user' && (<MenuUser userEmail={user.email} />)}
-                    {role === 'admin' && (<MenuAdmin />)}
+                    {role === 'user' && (<MenuClients />)}
+                    {role === 'admin' && (
+                        <>
+                            <br />
+                            <button onClick={() => navigate("clients")}>Client</button>
+                            <button onClick={() => navigate("employee")}>Employee</button>
+                            <button onClick={() => navigate("admin")}>Admin</button>
+                        </>
+                    )}
                 </>
             )
             : (

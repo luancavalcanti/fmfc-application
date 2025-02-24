@@ -5,10 +5,10 @@ export default function MultipleSelectField({
     name,
     value,
     list,
-    hidden,
+    hidden = false,
     onChange,
 }) {
-    const [arrayValues, setArrayValues] = useState(value || [""])
+    const [arrayValues, setArrayValues] = useState(value.length === 0 ? [""] : value)
     function handleChange(e, index) {
         const { name, value } = e.target
         arrayValues[index] = value

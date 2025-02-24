@@ -5,7 +5,6 @@ export default function useShowController() {
     const [showForm, setShowForm] = useState(false)
     const [showEdit, setShowEdit] = useState(false)
     const [id, setId] = useState('')
-
     function viewUpdate(id) {
         if (id) {
             setShowEdit(true)
@@ -13,12 +12,13 @@ export default function useShowController() {
         } else {
             setShowEdit(false)
             setShowForm(false)
+            setId('')
         }
     }
     return {
         viewUpdate,
         showForm, setShowForm,
         showEdit, setShowEdit,
-        id
+        id,
     }
 }

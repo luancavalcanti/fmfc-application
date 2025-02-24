@@ -22,6 +22,15 @@ export default function Complaints() {
         status: "New"
     }
 
+    const complaintsTableValues = {
+        contract: "",
+        complaint: "",
+        images: [],
+        // date_in: getCurrentDate(),
+        // date_out: "",
+        status: "New"
+    }
+
     const complaintsFields = [
         {
             label: "Contract",
@@ -64,7 +73,6 @@ export default function Complaints() {
 
     return (
         <div>
-            <button onClick={() => setShowForm(!showForm)}>New</button>
             {showForm && <CreateForm
                 defaultValues={complaintsDefaultValues}
                 fields={complaintsFields}
@@ -72,11 +80,16 @@ export default function Complaints() {
                 data={data}
                 onCreate={getData}
                 viewUpdate={viewUpdate}
+
             />}
             <CreateTable
-                defaultValues={complaintsDefaultValues}
+                defaultValues={complaintsTableValues}
                 data={data}
                 viewUpdate={viewUpdate}
+                id={id}
+                setShowForm={setShowForm}
+                showForm={showForm}
+                name="Complaints"
             />
             {showEdit && <CreateUpdate
                 id={id}

@@ -28,18 +28,21 @@ export default function UserPermissions() {
     ]
     return (
         <div>
-            <button onClick={() => setShowForm(!showForm)}>New</button>
             {showForm && <CreateForm
                 collectionName={collectionName}
                 defaultValues={userPermissionsDefaultValues}
                 fields={userPermissionsFields}
                 onCreate={getData}
-                show={setShowForm}
+                viewUpdate={viewUpdate}
             />}
             <CreateTable
                 data={data}
                 defaultValues={userPermissionsDefaultValues}
                 viewUpdate={viewUpdate}
+                id={id}
+                setShowForm={setShowForm}
+                showForm={showForm}
+                name="User Permissions"
             />
             {showEdit &&
                 <CreateUpdate
@@ -50,6 +53,7 @@ export default function UserPermissions() {
                     onUpdate={getData}
                 />
             }
+
         </div>
     )
 }

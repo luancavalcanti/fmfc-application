@@ -41,7 +41,6 @@ export default function Status() {
 
     return (
         <div>
-            <button onClick={() => setShowForm(!showForm)}>New</button>
             {showForm && <CreateForm
                 defaultValues={statusDefaultValues}
                 fields={statusFields}
@@ -54,6 +53,10 @@ export default function Status() {
                 defaultValues={statusDefaultValues}
                 data={sortedData}
                 viewUpdate={viewUpdate}
+                id={id}
+                setShowForm={setShowForm}
+                showForm={showForm}
+                name="Status"
             />
             {showEdit &&
                 <CreateUpdate

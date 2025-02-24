@@ -46,7 +46,6 @@ export default function Clients() {
 
   return (
     <div>
-      <button onClick={() => setShowForm(!showForm)}>New</button>
       {showForm && <CreateForm
         defaultValues={clientsDefaultValues}
         fields={clientsFields}
@@ -59,12 +58,16 @@ export default function Clients() {
         defaultValues={clientsDefaultValues}
         data={data}
         viewUpdate={viewUpdate}
+        id={id}
+        setShowForm={setShowForm}
+        showForm={showForm}
+        name="Clients"
       />
       {showEdit &&
         <CreateUpdate
           id={id}
           viewUpdate={viewUpdate}
-          collectionName={'clients'}
+          collectionName={collectionName}
           fields={clientsFields}
           onUpdate={getData}
         />

@@ -21,6 +21,12 @@ export default function Contracts() {
         frequency: "",
         employees: [],
     }
+    const contractsTableValues = {
+        client: "",
+        service: "",
+        frequency: "",
+        employees: [],
+    }
     const contractFields = [
         {
             label: "Client",
@@ -49,9 +55,6 @@ export default function Contracts() {
     ]
     return (
         <>
-            <br />
-            <br />
-            <button onClick={() => setShowForm(!showForm)}>New</button>
             {showForm && <CreateForm
                 defaultValues={contractsDefaultValues}
                 fields={contractFields}
@@ -61,9 +64,13 @@ export default function Contracts() {
                 viewUpdate={viewUpdate}
             />}
             <CreateTable
-                defaultValues={contractsDefaultValues}
+                defaultValues={contractsTableValues}
                 data={data}
                 viewUpdate={viewUpdate}
+                id={id}
+                setShowForm={setShowForm}
+                showForm={showForm}
+                name="Contracts"
             />
             {showEdit &&
                 <CreateUpdate

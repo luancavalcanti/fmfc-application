@@ -21,18 +21,21 @@ export default function Services() {
     ]
     return (
         <div>
-            <button onClick={() => setShowForm(!showForm)}>New</button>
             {showForm && <CreateForm
                 collectionName={collectionName}
                 defaultValues={servicesDefaultValues}
                 fields={servicesFields}
                 onCreate={getData}
-                show={setShowForm}
+                viewUpdate={viewUpdate}
             />}
             <CreateTable
                 data={data}
                 defaultValues={servicesDefaultValues}
                 viewUpdate={viewUpdate}
+                id={id}
+                setShowForm={setShowForm}
+                showForm={showForm}
+                name="Services"
             />
             {showEdit &&
                 <CreateUpdate

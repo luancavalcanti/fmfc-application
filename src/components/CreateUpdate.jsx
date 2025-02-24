@@ -7,6 +7,51 @@ import TextField from "./TextField"
 import MultipleSelectField from "./MultipleSelectField"
 import TextareaField from "./TextareaField"
 import FileField from "./FileField"
+import styled from "styled-components"
+
+const EditContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    background-color: #33BECA;
+    padding: 20px;
+    border-radius: 10px;
+    border: 5px solid #B3E588;
+    margin-top: 20px;
+    h2{
+        margin: 0;
+    }
+    #fieldContainer{
+        display: flex;
+        flex-direction: column;
+        
+        label{
+            align-self: flex-start;
+        }
+        input, select{
+            background-color: aliceblue;
+            color: #555;
+            padding: 10px;
+            border-radius: 10px;
+            border:none;
+            &:focus {
+                    outline: none;
+                }
+        }
+    }
+    #buttonContainer{
+        margin-top: 20px;
+        #btn-update{
+            background-color: #a2c11c;
+            color: white;
+        }
+
+        #btn-delete{
+            background-color: #f95959;
+            color:white;
+        }
+    }
+
+`
 
 export default function CreateUpdate({ id, viewUpdate, collectionName, fields, onUpdate }) {
     const { data } = useGetData(collectionName)
@@ -35,6 +80,7 @@ export default function CreateUpdate({ id, viewUpdate, collectionName, fields, o
         email: TextField,
         password: TextField,
         color: TextField,
+        tel: TextField,
         textarea: TextareaField,
         file: FileField
     }
@@ -45,86 +91,46 @@ export default function CreateUpdate({ id, viewUpdate, collectionName, fields, o
             images: imagesFiltered
         }))
     }
-
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
     return (
         <>
-            <h1>Edit</h1>
-            {updateData &&
-                fields.map((field, index) => {
-                    const { label, type, name, list } = field
-                    const Component = componentMap[type];
-                    return <div key={index}>
-                        <Component
-                            label={label}
-                            type={type}
-                            name={name}
-                            list={list}
-                            setImages={setImages}
-                            value={type === 'file' ? '' : updateData[name]}
-                            onChange={handleChange}
-                        // hidden={hidden}
-                        />
-                        {type === 'file' && updateData?.images.map((image, index) => (
-                            <div key={index}>
-                                <img src={image} style={{ width: "100px", borderRadius: "10px", padding: "5px" }} />
-                                <button onClick={() => handleRemoveFile(image)}>x</button>
-                            </div>
-                        ))}
-                    </div>
-
-                })
-
-                /* fields.map((field, index) => {
-                    const { label, name, type, list, listValues, add } = field
-                    if (list) {
-                        return <div key={index}>
-                            {
-                                Array.isArray(updateData[name])
-                                    ? (
-                                        <div key={index}>
-                                            <MultipleSelectField
-                                                label={label}
-                                                name={name + index}
-                                                values={updateData[name]}
-                                                list={list}
-                                                listValues={listValues}
-                                                onChange={handleChange}
-                                                add={add}
-                                            />
-                                        </div>
-                                    ) : (
-                                        <SelectField
-                                            label={label}
-                                            name={name}
-                                            list={list}
-                                            value={updateData[name]}
-                                            listValues={listValues}
-                                            onChange={handleChange}
-                                            add={add}
-                                        />
-
-                                    )
-                            }
-                        </div>
-
-                    } else {
+            <EditContainer>
+                <h2>Edit</h2>
+                {updateData &&
+                    fields.map((field, index) => {
+                        const { label, type, name, list } = field
+                        const Component = componentMap[type];
                         return (
-                            <div key={index}>
-                                <TextField
+                            <div id="fieldContainer" key={index}>
+                                <Component
                                     label={label}
                                     type={type}
                                     name={name}
-                                    value={updateData[name]}
+                                    list={list}
+                                    setImages={setImages}
+                                    value={type === 'file' ? '' : updateData[name]}
                                     onChange={handleChange}
                                 />
+                                {type === 'file' && updateData?.images.map((image, index) => (
+                                    <div key={index}>
+                                        <img src={image} style={{ width: "100px", borderRadius: "10px", padding: "5px" }} />
+                                        <button onClick={() => handleRemoveFile(image)}>x</button>
+                                    </div>
+                                ))}
                             </div>
                         )
-                    }
-                }) */
-            }
-            <button onClick={handleUpdate}>Update</button>
-            <button onClick={() => viewUpdate()}>Cancel</button>
-            <button onClick={() => handleRemove(dataToUpdate.id)}>Delete</button>
+                    })
+                }
+                <div id="buttonContainer">
+                    <button id="btn-update" onClick={handleUpdate}>Update</button>
+                    <button id="btn-cancel" onClick={() => viewUpdate()}>Cancel</button>
+                    <button id="btn-delete" onClick={() => {
+                        if (window.confirm("Are you sure you want to delete this item?")) {
+                            handleRemove(dataToUpdate.id);
+                        }
+                    }}>Delete</button>
+                </div>
+            </EditContainer>
         </>
     )
 }

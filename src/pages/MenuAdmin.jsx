@@ -1,7 +1,12 @@
+import { useContext } from "react";
 import useGetData from "../hooks/useGetData";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+import MenuContainer from "../components/MenuContainer";
+import { MenuContainerStyled } from "../styles/MenuContainerStyled";
 
 export default function MenuAdmin() {
+    const { role } = useContext(UserContext)
     const { data: userPermissions } = useGetData('userPermissions')
     const { data: employees } = useGetData('employees')
     const { data: clients } = useGetData('clients')
@@ -9,52 +14,47 @@ export default function MenuAdmin() {
     const { data: contracts } = useGetData('contracts')
     const { data: complaints } = useGetData('complaints')
     const { data: status } = useGetData('status')
-
     const navigate = useNavigate()
-    const tempStyle = {
-        border: '1px solid black',
-        padding: '10px',
-        margin: '10px',
-        backgroundColor: "grey",
-        borderRadius: "10px"
-    }
+
+    const listGroup = [1]
+    const objectsList = [
+        { group: 1, title: 'UserPermissions', subtitle: `Item(s): ${userPermissions.length}`, handleView: () => navigate('permissions') },
+        { group: 1, title: 'Employees', subtitle: `Item(s): ${employees.length}`, handleView: () => navigate('employees') },
+        { group: 1, title: 'Clients', subtitle: `Item(s): ${clients.length}`, handleView: () => navigate('clients') },
+        { group: 1, title: 'Services', subtitle: `Item(s): ${services.length}`, handleView: () => navigate('services') },
+        { group: 1, title: 'Contracts', subtitle: `Item(s): ${contracts.length}`, handleView: () => navigate('contracts') },
+        { group: 1, title: 'Complaints', subtitle: `Item(s): ${complaints.length}`, handleView: () => navigate('complaints') },
+        { group: 1, title: 'Status', subtitle: `Item(s): ${status.length}`, handleView: () => navigate('status') }
+    ]
+
     return (
-        <div >
-            <div style={tempStyle}>
-                <h2>UserPermissions</h2>
-                <p>{userPermissions.length}</p>
-                <button onClick={() => navigate('admin/permissions')}>View</button>
-            </div>
-            <div style={tempStyle}>
-                <h2>Employees</h2>
-                <p>{employees.length}</p>
-                <button onClick={() => navigate('admin/employees')}>View</button>
-            </div>
-            <div style={tempStyle}>
-                <h2>Clients</h2>
-                <p>{clients.length}</p>
-                <button onClick={() => navigate('admin/clients')}>View</button>
-            </div>
-            <div style={tempStyle}>
-                <h2>Services</h2>
-                <p>{services.length}</p>
-                <button onClick={() => navigate('admin/services')}>View</button>
-            </div>
-            <div style={tempStyle}>
-                <h2>Contracts</h2>
-                <p>{contracts.length}</p>
-                <button onClick={() => navigate('admin/contracts')}>View</button>
-            </div>
-            <div style={tempStyle}>
-                <h2>Complaints</h2>
-                <p>{complaints.length}</p>
-                <button onClick={() => navigate('admin/complaints')}>View</button>
-            </div>
-            <div style={tempStyle}>
-                <h2>Status</h2>
-                <p>{status.length}</p>
-                <button onClick={() => navigate('admin/status')}>View</button>
-            </div>
-        </div>
+        role === 'admin' ? (
+            <>
+                <MenuContainerStyled>
+                    <button id="btn-back" onClick={() => navigate(-1)}>Back</button>
+                    <h2>Admin</h2>
+                    {listGroup.map((group, index) => (
+                        <div id="groupContainer" key={index}>
+
+                            {objectsList.map((object, index) => (
+                                object.group === group &&
+                                <MenuContainer
+                                    key={index}
+                                    title={object.title}
+                                    subtitle={object.subtitle}
+                                    handleView={object.handleView}
+                                />
+                            ))}
+                            <br />
+                        </div>
+                    )
+                    )}
+                </MenuContainerStyled>
+            </>
+        )
+            : (
+                <p>You need permissions to access this page.</p>
+            )
+
     )
 }

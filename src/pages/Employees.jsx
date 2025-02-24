@@ -10,7 +10,6 @@ export default function Employees() {
     const collectionName = 'employees'
     const { data, getData } = useGetData(collectionName)
     const userList = data.map(user => user.email)
-    const userValues = data.map(user => user.uid)
     const employeesDefaultValues = {
         // uid: "",
         name: "",
@@ -21,12 +20,21 @@ export default function Employees() {
         dob: "",
         dateIn: getCurrentDate()
     }
+    const employeesTableValues = {
+        // uid: "",
+        name: "",
+        lastname: "",
+        email: "",
+        phone: "",
+        // language: "",
+        // dob: "",
+        // dateIn: getCurrentDate()
+    }
     const employeesFields = [
         {
             label: "User",
             type: "select",
             list: userList,
-            listValues: userValues,
             name: "uid",
         },
         {
@@ -68,7 +76,6 @@ export default function Employees() {
 
     return (
         <div>
-            <button onClick={() => setShowForm(!showForm)}>New</button>
             {showForm && <CreateForm
                 defaultValues={employeesDefaultValues}
                 fields={employeesFields}
@@ -78,9 +85,13 @@ export default function Employees() {
                 viewUpdate={viewUpdate}
             />}
             <CreateTable
-                defaultValues={employeesDefaultValues}
+                defaultValues={employeesTableValues}
                 data={data}
                 viewUpdate={viewUpdate}
+                id={id}
+                setShowForm={setShowForm}
+                showForm={showForm}
+                name="Employees"
             />
             {showEdit &&
                 <CreateUpdate
