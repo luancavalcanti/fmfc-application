@@ -1,13 +1,10 @@
-import CreateForm from "../components/CreateForm"
 import CreateTable from "../components/CreateTable"
-import CreateUpdate from "../components/CreateUpdate"
 import useGetData from "../hooks/useGetData"
-import useShowController from "../hooks/useShowController"
 
 export default function UserPermissions() {
     const collectionName = 'userPermissions'
-    const { data, getData } = useGetData(collectionName)
-    const { viewUpdate, showEdit, showForm, setShowForm, id } = useShowController()
+    const { data } = useGetData(collectionName)
+
     const roleList = ["user", "admin", "new"]
     const userPermissionsDefaultValues = {
         email: "",
@@ -28,32 +25,14 @@ export default function UserPermissions() {
     ]
     return (
         <div>
-            {showForm && <CreateForm
-                collectionName={collectionName}
-                defaultValues={userPermissionsDefaultValues}
-                fields={userPermissionsFields}
-                onCreate={getData}
-                viewUpdate={viewUpdate}
-            />}
             <CreateTable
                 data={data}
+                tableValues={userPermissionsDefaultValues}
                 defaultValues={userPermissionsDefaultValues}
-                viewUpdate={viewUpdate}
-                id={id}
-                setShowForm={setShowForm}
-                showForm={showForm}
                 name="User Permissions"
+                collectionName={collectionName}
+                fields={userPermissionsFields}
             />
-            {showEdit &&
-                <CreateUpdate
-                    id={id}
-                    viewUpdate={viewUpdate}
-                    collectionName={collectionName}
-                    fields={userPermissionsFields}
-                    onUpdate={getData}
-                />
-            }
-
         </div>
     )
 }

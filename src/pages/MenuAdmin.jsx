@@ -31,13 +31,12 @@ export default function MenuAdmin() {
         role === 'admin' ? (
             <>
                 <MenuContainerStyled>
-                    <button id="btn-back" onClick={() => navigate(-1)}>Back</button>
-                    <h2>Admin</h2>
+                    <div id="container-head">
+                        <h2>Admin</h2>
+                    </div>
                     {listGroup.map((group, index) => (
                         <div id="groupContainer" key={index}>
-
-                            {objectsList.map((object, index) => (
-                                object.group === group &&
+                            {objectsList.map((object, index) => (object.group === group &&
                                 <MenuContainer
                                     key={index}
                                     title={object.title}

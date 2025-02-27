@@ -2,13 +2,15 @@ import styled from "styled-components"
 
 const BoxContainer = styled.div`
         display: flex;
-        width: 100%;
-        max-width: 400px;
+        min-width: 350px;
         padding: 5px;
         margin: 5px 0;
         background-color:rgba(51, 189, 202, 0.66);
         border-radius: 30px;
         box-sizing: border-box;
+        @media (max-width: 500px){
+            width: 100%;
+        }
         button{
             width: 100%;
             padding: 0.2em;
@@ -16,8 +18,15 @@ const BoxContainer = styled.div`
             border-radius: 25px;
             background-color: #33BECA;
             color:white;
+            &:disabled {
+                background-color: #ccc;
+                color: #555;
+                cursor: default;
+                .subtitle {
+                    color: #555;
+                }
+            }
         }
-        
         .titleContainer {
             display: flex;
             flex-direction: column;
@@ -27,7 +36,6 @@ const BoxContainer = styled.div`
             display: flex;
             text-align: left;
         }
-
         .title {
             /* background-color: red; */
             flex-direction: column;
@@ -36,7 +44,6 @@ const BoxContainer = styled.div`
                 margin: 0;
             }
         }
-
         .subtitle {
             padding: 5px 10px 10px 10px;
             /* background-color: blue; */

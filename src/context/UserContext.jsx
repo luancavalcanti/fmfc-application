@@ -11,11 +11,14 @@ export function UserProvider({ children }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState({})
-  const { data } = useGetData('userPermissions')
+  const { data: userPermissions } = useGetData('userPermissions')
+  const { data: employees } = useGetData('employees')
   const [role, setRole] = useState(localStorage.getItem('userRole') || '')
+  const employee = employees.filter(employee => employee.email === user.email)[0]
+  const userName = `${employee?.name} ${employee?.lastname}`
   const userFiltered = useMemo(() => {
-    return data.find(data => data.uid === user?.uid);
-  }, [data, user]);
+    return userPermissions.find(data => data.uid === user?.uid);
+  }, [userPermissions, user]);
   // //check if there is a user logging in when the page is first loaded
   // //if there is, set the user and role states
   useEffect(() => {
@@ -24,7 +27,6 @@ export function UserProvider({ children }) {
     })
 
   }, []);
-
   useEffect(() => {
     if (user && userFiltered) {
       setRole(userFiltered.role);
@@ -98,6 +100,7 @@ export function UserProvider({ children }) {
       email, setEmail,
       password, setPassword,
       user, setUser,
+      userName,
       role,
     }}>
       {children}

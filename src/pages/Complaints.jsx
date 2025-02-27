@@ -1,13 +1,9 @@
-import CreateForm from "../components/CreateForm";
 import CreateTable from "../components/CreateTable";
-import CreateUpdate from "../components/CreateUpdate";
 import useGetData from "../hooks/useGetData";
-import useShowController from "../hooks/useShowController";
 
 export default function Complaints() {
-    const { viewUpdate, showEdit, showForm, setShowForm, id } = useShowController()
     const collectionName = 'complaints'
-    const { data, getData } = useGetData(collectionName)
+    const { data } = useGetData(collectionName)
     const { data: contracts } = useGetData('contracts')
     const contractList = contracts.map(contract => `${contract.client} - ${contract.service}`)
     const getCurrentDate = () => { const today = new Date(); return today.toISOString().split("T")[0]; };
@@ -73,31 +69,14 @@ export default function Complaints() {
 
     return (
         <div>
-            {showForm && <CreateForm
-                defaultValues={complaintsDefaultValues}
-                fields={complaintsFields}
-                collectionName={collectionName}
-                data={data}
-                onCreate={getData}
-                viewUpdate={viewUpdate}
-
-            />}
             <CreateTable
-                defaultValues={complaintsTableValues}
                 data={data}
-                viewUpdate={viewUpdate}
-                id={id}
-                setShowForm={setShowForm}
-                showForm={showForm}
+                tableValues={complaintsTableValues}
+                defaultValues={complaintsDefaultValues}
                 name="Complaints"
-            />
-            {showEdit && <CreateUpdate
-                id={id}
-                viewUpdate={viewUpdate}
                 collectionName={collectionName}
                 fields={complaintsFields}
-                onUpdate={getData}
-            />}
+            />
         </div>
 
     );

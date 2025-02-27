@@ -14,8 +14,35 @@ import { TbRefresh } from "react-icons/tb"
 const ComplaintContainer = styled.div`
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
-    /* margin: 0 10px; */
+    margin: 0 150px;
+    @media (max-width: 1024px){
+        margin: 0 100px;
+    }
+    @media (max-width: 768px){
+        margin: 0 50px;
+    }
+    @media (max-width: 480px){
+        margin: 0;
+    }
+    #container-head{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        height: 80px;
+        #btn-back{
+            width: 100px;
+            margin-left: 20px;
+            margin-top: 10px;
+            position: absolute;
+            left: 0;
+        }
+        h2{
+            flex-grow: 1;
+            text-align: center;
+        }
+    }
     
     #btn-back{
         width: 100px;
@@ -27,6 +54,7 @@ const ComplaintContainer = styled.div`
         display: flex;
         justify-content: space-between;
         align-items: center;
+        height: 80px;
         padding: 0 10px;
         p{
             background-color: ${props => props.color}; 
@@ -37,11 +65,16 @@ const ComplaintContainer = styled.div`
         }
     }
     #body {
+        flex: 1;
         color: #555;
         display: flex;
         flex-direction: column;
         background-color: #ecf0f1;
-
+        border-radius: 10px;
+        @media (max-width: 480px){
+            margin: 0;
+            border-radius: 0;
+        }
         #description, #images, #comments{
             display: flex;
             flex-direction: column;
@@ -127,6 +160,7 @@ const ComplaintContainer = styled.div`
             flex-direction: column;
             align-items: flex-start;
             width: 100%;
+            min-height: 100px;
             background-color: #d5dbdb;
             border-radius: 10px;
             /* padding: 8px; */
@@ -137,7 +171,6 @@ const ComplaintContainer = styled.div`
                 flex-direction: column;
                 align-items: flex-start;
                 width: 100%;
-
                 #commentName{
                     display: flex;
                     flex-direction: column;
@@ -273,8 +306,10 @@ export default function Complaint() {
     return (
         complaintFiltered && <>
             <ComplaintContainer color={statusColor?.color}>
-                <button id="btn-back" onClick={() => navigate(-1)}>Back</button>
-                <h2>{complaintFiltered.contract.split(' - ')[0]}</h2>
+                <div id="container-head">
+                    <button id="btn-back" onClick={() => navigate(-1)}>Back</button>
+                    <h2>{complaintFiltered.contract.split(' - ')[0]}</h2>
+                </div>
                 <div id="title">
                     <h3>{complaintFiltered.contract.split(' - ')[1]}</h3>
                     <p>{complaintFiltered.status}</p>
@@ -294,14 +329,15 @@ export default function Complaint() {
                         <label>Description</label>
                         <p>{complaintFiltered.complaint}</p>
                     </div>
-                    <div id="images">
-                        {complaintFiltered.images.length > 0 && <label>Images<br /></label>}
+                    {complaintFiltered.images.length > 0 && <div id="images">
+                        <label>Images<br /></label>
                         <div id="imagesContainer">
-                            {complaintFiltered.images.length > 0 && complaintFiltered.images.map((image, index) => (
+                            {complaintFiltered.images.map((image, index) => (
                                 <img key={index} src={image} />
                             ))}
                         </div>
-                    </div>
+                    </div>}
+
                     <div id="comments">
                         <label>Comments</label>
                         <div id="commentsContainer">

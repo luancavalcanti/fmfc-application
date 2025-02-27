@@ -5,6 +5,7 @@ import MultipleSelectField from "./MultipleSelectField"
 import SelectField from "./SelectField"
 import TextareaField from "./TextareaField"
 import TextField from "./TextField"
+import { useNavigate } from "react-router-dom"
 
 const FormContainer = styled.div`
     display: flex;
@@ -40,6 +41,7 @@ const FormContainer = styled.div`
 
 `
 export default function CreateForm({ fields, defaultValues, collectionName, onCreate, viewUpdate }) {
+    const navigate = useNavigate()
 
     const { handleCreate, setFormData, formData, setImages } = useCreateData(collectionName, defaultValues, onCreate)
 
@@ -66,7 +68,6 @@ export default function CreateForm({ fields, defaultValues, collectionName, onCr
 
     return (
         <>
-            <h1>Form</h1>
             <FormContainer>
                 {
                     fields.map((field, index) => {
@@ -90,7 +91,7 @@ export default function CreateForm({ fields, defaultValues, collectionName, onCr
                 }
                 <div id="buttonContainer">
                     <button id="btn-create" onClick={() => handleCreate(viewUpdate)}>Create</button>
-                    <button id="btn-cancel" onClick={() => viewUpdate()}>Cancel</button>
+                    <button id="btn-cancel" onClick={() => navigate(-1)}>Cancel</button>
                 </div>
             </FormContainer>
         </>

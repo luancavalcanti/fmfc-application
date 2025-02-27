@@ -6,14 +6,16 @@ const TableContainer = styled.div`
     flex-direction: column;
     #btn-back{
         width: 100px;
-        margin-left: 20px;
-        margin-top: 10px;
     }
     #btn-new{
-        align-self: flex-end;
         width: 100px;
-        margin-right: 20px;
         background-color: aliceblue;
+    }
+    #table-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 20px;
     }
 `
 const TableStyled = styled.table`
@@ -61,15 +63,22 @@ const TableStyled = styled.table`
     }
 
 `
-export default function CreateTable({ defaultValues, data, viewUpdate, id, setShowForm, showForm, name }) {
-    console.log(showForm)
-    const headers = Object.keys(defaultValues)
+export default function CreateTable({ defaultValues, tableValues, data, collectionName, name, fields }) {
+    const headers = Object.keys(tableValues)
     const navigate = useNavigate();
+    function handleUpdate(itemId) {
+        navigate(`${itemId}`, { state: { fields, name, collectionName } });
+    }
+    function handleNewForm() {
+        navigate(`new`, { state: { defaultValues, fields, name, collectionName } });
+    }
     return (
         <TableContainer>
-            {!showForm && <button id="btn-back" onClick={() => navigate(-1)}>Back</button>}
-            <h2>{name} List</h2>
-            {!showForm && <button id="btn-new" onClick={() => setShowForm(true)}>New</button>}
+            <div id="table-header">
+                <button id="btn-back" onClick={() => navigate(-1)}>Back</button>
+                <h2>{name} List</h2>
+                <button id="btn-new" onClick={() => handleNewForm()}>New</button>
+            </div>
             <TableStyled>
                 <thead>
                     <tr>
@@ -82,9 +91,9 @@ export default function CreateTable({ defaultValues, data, viewUpdate, id, setSh
                     {
                         data?.length > 0
                             ? data.map((item, index) => (
-                                <tr key={index} style={id === item.id ? { backgroundColor: "#B3E588" } : {}}>
+                                <tr key={index}>
                                     {headers.map((key, index) => (
-                                        <td key={index} onClick={() => (viewUpdate(item.id))} style={key === 'color' ? { backgroundColor: item[key], color: "white" } : {}}>
+                                        <td key={index} onClick={() => (handleUpdate(item.id))} style={key === 'color' ? { backgroundColor: item[key], color: "white" } : {}}>
                                             {Array.isArray(item[key])
                                                 ? key === 'images'
                                                     ? item[key].map((item, index) => <img key={index} src={item} style={{ width: "50px", borderRadius: "10px", padding: "5px" }} />)

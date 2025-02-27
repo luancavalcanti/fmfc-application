@@ -27,8 +27,10 @@ export default function MenuComplaints() {
     }
     return (
         <MenuContainerStyled>
-            <button id="btn-back" onClick={() => navigate(-1)}>Back</button>
-            <h2>{title}</h2>
+            <div id="container-head">
+                <button id="btn-back" onClick={() => navigate(-1)}>Back</button>
+                <h2>{title}</h2>
+            </div>
             {title !== client && <h2 style={{ color: "#888", margin: "2px 0 2px 0" }}>{client}</h2>}
             <h2 style={{ color: "#888", marginTop: "0" }}>{service}</h2>
             <div id="groupContainer">

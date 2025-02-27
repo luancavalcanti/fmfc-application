@@ -18,8 +18,21 @@ import Complaint from "./pages/complaint";
 import AdminRoute from "./pages/AdminRoute";
 import MenuClients from "./pages/MenuClients";
 import MenuEmployees from "./pages/MenuEmployees";
+import NewForm from "./pages/NewForm";
+import UpdateTable from "./pages/UpdateTable";
+import React from "react";
 
 function App() {
+  const adminRoutes = [
+    { path: "employees", component: <Employees /> },
+    { path: "clients", component: <Clients /> },
+    { path: "services", component: <Services /> },
+    { path: "contracts", component: <Contracts /> },
+    { path: "complaints", component: <Complaints /> },
+    { path: "status", component: <Status /> },
+    { path: "permissions", component: <UserPermissions /> },
+  ];
+
   return (
     <>
       <UserProvider>
@@ -30,13 +43,13 @@ function App() {
               <Route index element={<Home />} />
               <Route path="admin" element={<AdminRoute />}>
                 <Route index element={<MenuAdmin />} />
-                <Route path="permissions" element={<UserPermissions />} />
-                <Route path="employees" element={<Employees />} />
-                <Route path="clients" element={<Clients />} />
-                <Route path="services" element={<Services />} />
-                <Route path="contracts" element={<Contracts />} />
-                <Route path="complaints" element={<Complaints />} />
-                <Route path="status" element={<Status />} />
+                {adminRoutes.map(({ path, component }, index) => (
+                  <React.Fragment key={index}>
+                    <Route path={path} element={component} />
+                    <Route path={`${path}/new`} element={<NewForm />} />
+                    <Route path={`${path}/:id`} element={<UpdateTable />} />
+                  </React.Fragment>
+                ))}
               </Route>
               <Route path="clients" element={<MenuClients />} />
               <Route path="employee" element={<MenuEmployees />} />

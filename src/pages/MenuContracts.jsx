@@ -16,8 +16,10 @@ export default function MenuContracts() {
 
     return (
         <MenuContainerStyled>
-            <button id="btn-back" onClick={() => navigate(-1)}>Back</button>
-            <h2>{title}</h2>
+            <div id="container-head">
+                <button id="btn-back" onClick={() => navigate(-1)}>Back</button>
+                <h2>{title}</h2>
+            </div>
             <div id="groupContainer">
                 {contractsView && contractsView.map((contractView, index) => {
                     const complaintsFiltered = complaints.filter(complaint => complaint.contract === contract[index])
