@@ -8,7 +8,7 @@ export default function NewForm() {
     const { getData } = useGetData(collectionName)
     return (
         <div>
-            <h2>New {name}</h2>
+            <h2>New {name.slice(0, -1)}</h2>
             <CreateForm
                 defaultValues={defaultValues}
                 fields={fields}

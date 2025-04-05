@@ -21,15 +21,16 @@ export default function Comments({ contractID }) {
     console.log(formDefault)
     const CRUD = useCRUD(collectionName, formDefault)
     const { formData, setFormData, data, handleForm } = CRUD
-    // const contractsList = useCRUD('contracts')
-    // const list = contractsList.data?.map(contract => (
-    //     {
-    //         id: contract.id,
-    //         client: contract.client,
-    //         service: contract.service,
-    //     }
-    // )
-    // )
+
+    useEffect(() => {
+        if (formData.images.length > 0) {
+            setShowProgressBar(false)
+            handleForm(collectionName);
+            setFormData(formDefault)
+            setPreviewImages([])
+        }
+    }, [formData.images]);
+
     function handleChange(e) {
         const { name, value } = e.target
         setFormData(prevState => ({
@@ -77,14 +78,7 @@ export default function Comments({ contractID }) {
         }
 
     }
-    useEffect(() => {
-        if (formData.images.length > 0) {
-            setShowProgressBar(false)
-            handleForm(collectionName);
-            setFormData(formDefault)
-            setPreviewImages([])
-        }
-    }, [formData.images]);
+
 
     return (
         contractID &&

@@ -1,4 +1,3 @@
-import styled from "styled-components"
 import useCreateData from "../hooks/useCreateData"
 import FileField from "./FileField"
 import MultipleSelectField from "./MultipleSelectField"
@@ -6,47 +5,26 @@ import SelectField from "./SelectField"
 import TextareaField from "./TextareaField"
 import TextField from "./TextField"
 import { useNavigate } from "react-router-dom"
+import { FormStyled } from "../styles/FormStyled"
+import { useContext, useState } from "react"
+import { ComplaintsContext } from "../context/ComplaintsContext"
 
-const FormContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    background-color: #33BECA;
-    padding: 20px;
-    border-radius: 10px;
-    border: 5px solid rgb(136, 173, 229);
-    #fieldContainer{
-        display: flex;
-        flex-direction: column;
-        
-        label{
-            align-self: flex-start;
-        }
-        input, select{
-            background-color: aliceblue;
-            color: #555;
-            padding: 10px;
-            border-radius: 10px;
-            border:none;
-            &:focus {
-                    outline: none;
-                }
-        }
-    }
-    #buttonContainer{
-        margin-top: 20px;
-        #btn-create{
-            background-color: #B3E588;
-        }
-    }
-
-`
 export default function CreateForm({ fields, defaultValues, collectionName, onCreate, viewUpdate }) {
     const navigate = useNavigate()
-
+    const { getDependence } = useContext(ComplaintsContext)
     const { handleCreate, setFormData, formData, setImages } = useCreateData(collectionName, defaultValues, onCreate)
-
-    function handleChange(e) {
+    const [updateFields, setUpdateFields] = useState(fields)
+    function handleChange(e, dependence) {
         const { name, value } = e.target
+        if (dependence) {
+            const service = getDependence(value)
+            setUpdateFields(prev =>
+                prev.map(field =>
+                    field.name === "service" ? { ...field, list: service } : field
+                )
+            )
+            console.log(service)
+        }
         setFormData(prev => ({
             ...prev,
             [name]: value
@@ -68,10 +46,10 @@ export default function CreateForm({ fields, defaultValues, collectionName, onCr
 
     return (
         <>
-            <FormContainer>
+            <FormStyled>
                 {
-                    fields.map((field, index) => {
-                        const { label, type, name, list, hidden } = field
+                    updateFields.map((field, index) => {
+                        const { label, type, name, list, hidden, dependence } = field
                         const Component = componentMap[type];
                         return (
                             <div id="fieldContainer" key={index}>
@@ -81,7 +59,7 @@ export default function CreateForm({ fields, defaultValues, collectionName, onCr
                                     name={name}
                                     list={list}
                                     value={formData[name]}
-                                    onChange={handleChange}
+                                    onChange={(e) => handleChange(e, dependence)}
                                     setImages={setImages}
                                     hidden={hidden}
                                 />
@@ -93,7 +71,7 @@ export default function CreateForm({ fields, defaultValues, collectionName, onCr
                     <button id="btn-create" onClick={() => handleCreate(viewUpdate)}>Create</button>
                     <button id="btn-cancel" onClick={() => navigate(-1)}>Cancel</button>
                 </div>
-            </FormContainer>
+            </FormStyled>
         </>
 
     )

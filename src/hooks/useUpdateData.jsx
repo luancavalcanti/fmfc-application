@@ -2,13 +2,14 @@ import { doc, updateDoc } from "firebase/firestore"
 import { db, storage } from "../firebase-config"
 import { useState } from "react"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
+import { useNavigate } from "react-router-dom"
 
-export default function useUpdateData(collectionName, data, setView, callback) {
+export default function useUpdateData(collectionName, data, callback) {
 
     const [updateData, setUpdateData] = useState(data)
     const [images, setImages] = useState(null)
     const time = new Date().toISOString()
-
+    const navigate = useNavigate()
     async function handleUpdate() {
         const docRef = doc(db, collectionName, updateData.id)
         if (images?.length > 0) {
@@ -28,7 +29,7 @@ export default function useUpdateData(collectionName, data, setView, callback) {
         } else {
             await updateDoc(docRef, updateData)
         }
-        setView(false)
+        navigate(-1)
         callback && callback()
     }
 

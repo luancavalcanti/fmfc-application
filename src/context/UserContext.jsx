@@ -14,7 +14,7 @@ export function UserProvider({ children }) {
   const { data: userPermissions } = useGetData('userPermissions')
   const { data: employees } = useGetData('employees')
   const [role, setRole] = useState(localStorage.getItem('userRole') || '')
-  const employee = employees.filter(employee => employee.email === user.email)[0]
+  const employee = employees?.filter(employee => employee.email === user?.email)[0]
   const userName = `${employee?.name} ${employee?.lastname}`
   const userFiltered = useMemo(() => {
     return userPermissions.find(data => data.uid === user?.uid);

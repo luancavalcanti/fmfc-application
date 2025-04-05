@@ -4,12 +4,31 @@ import styled from "styled-components";
 const TableContainer = styled.div`
     display: flex;
     flex-direction: column;
+    margin: 0 150px;
+    @media (max-width: 1024px){
+        margin: 0 100px;
+    }
+    @media (max-width: 768px){
+        margin: 0 50px;
+    }
+    @media (max-width: 480px){
+        margin: 0;
+        border-radius: 0px;
+    }
     #btn-back{
         width: 100px;
+        &:hover{
+            background-color: white;
+            border: 1px solid #ccc;
+        }
     }
     #btn-new{
         width: 100px;
-        background-color: aliceblue;
+        background-color: #7dd87d;
+        &:hover{
+            background-color: white;
+            border: 1px solid #7dd87d;
+        }
     }
     #table-header{
         display: flex;
@@ -63,7 +82,9 @@ const TableStyled = styled.table`
     }
 
 `
-export default function CreateTable({ defaultValues, tableValues, data, collectionName, name, fields }) {
+export default function CreateTable({ context, name }) {
+    const { defaultValues, tableValues, data, collectionName, fields } = context;
+    console.log(defaultValues)
     const headers = Object.keys(tableValues)
     const navigate = useNavigate();
     function handleUpdate(itemId) {

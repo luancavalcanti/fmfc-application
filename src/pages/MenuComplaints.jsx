@@ -11,20 +11,22 @@ const ComplaintContainer = styled.div`
     justify-content: center;
     #status{
         width: 20px;
-        background-color: ${props => props.statusColor?.color || 'transparent'};
+        background-color: ${props => props.color?.color || 'transparent'};
         margin: 25px 5px 25px 0;
         border-radius: 10px;
     }
 `
-
 export default function MenuComplaints() {
     const location = useLocation()
-    const { complaintsView, client, title, service } = location.state
-    const { data: status } = useGetData('status')
+    const { client, title, service } = location.state
+    const { data: status, getData } = useGetData('status')
+    const { data: complaints } = useGetData('complaints')
+    const complaintsFiltered = complaints?.filter(complaint => complaint.client === client && complaint.service === service)
     const navigate = useNavigate()
-    function handleView(complaintView, complaintId) {
-        navigate('complaint', { state: { complaintView, complaintId } })
+    function handleView(complaint, complaintId, color) {
+        navigate('complaint', { state: { complaint, complaintId, color } })
     }
+
     return (
         <MenuContainerStyled>
             <div id="container-head">
@@ -34,19 +36,20 @@ export default function MenuComplaints() {
             {title !== client && <h2 style={{ color: "#888", margin: "2px 0 2px 0" }}>{client}</h2>}
             <h2 style={{ color: "#888", marginTop: "0" }}>{service}</h2>
             <div id="groupContainer">
-                {complaintsView && complaintsView.map((complaintView, index) => {
-                    const statusFiltered = status.filter(status => status.name === complaintView.status)[0]
+                {complaintsFiltered && complaintsFiltered.map((complaint, index) => {
+                    getData()
+                    const statusFiltered = status.filter(status => status.name === complaint.status)[0]
                     const title = `Status: ${statusFiltered?.name}`
-                    const title2 = `Complaint ${index + 1}`
-                    const subtitle = `${complaintView.complaint}`
+                    {/* const title2 = `Complaint ${index + 1}` */ }
+                    const subtitle = `${complaint.complaint}`
                     return (
-                        <ComplaintContainer statusColor={statusFiltered} key={index}>
+                        <ComplaintContainer color={statusFiltered} key={index}>
                             <div id="status"></div>
                             <MenuContainer
-                                title={title}
-                                title2={title2}
-                                subtitle={subtitle}
-                                handleView={() => handleView(complaintView, complaintView.id, statusFiltered?.color)}
+                                title={subtitle}
+                                // title2={title2}
+                                subtitle={title}
+                                handleView={() => handleView(complaint, complaint.id, statusFiltered?.color)}
                             />
                         </ComplaintContainer>
                     )

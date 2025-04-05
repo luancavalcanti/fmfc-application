@@ -42,10 +42,12 @@ const Container = styled.div`
 export default function Login() {
     const { signIn, login, email, setEmail, password, setPassword } = useContext(UserContext)
     const navigate = useNavigate()
+
     function handleLogin() {
         login()
         navigate('/home')
     }
+
     return (
         <Container>
             <div id="loginContainer">
@@ -68,7 +70,7 @@ export default function Login() {
                 <br />
                 <div>
                     <button onClick={handleLogin}>Login</button>
-                    {/* <button onClick={signIn}>Register user</button> */}
+                    <button onClick={signIn}>Register user</button>
                 </div>
             </div>
         </Container>

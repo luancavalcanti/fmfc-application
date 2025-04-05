@@ -1,30 +1,15 @@
+import { useContext } from "react"
 import CreateTable from "../components/CreateTable"
-import useGetData from "../hooks/useGetData"
+import { ServicesContext } from "../context/ServicesContext"
 
 export default function Services() {
-    const collectionName = 'services'
-    const { data } = useGetData(collectionName)
-
-    const servicesDefaultValues = {
-        desc: ""
-    }
-    const servicesFields = [
-        {
-            label: "Description",
-            type: "text",
-            name: "desc"
-        }
-    ]
+    const serviceContext = useContext(ServicesContext)
 
     return (
         <div>
             <CreateTable
-                data={data}
-                tableValues={servicesDefaultValues}
-                defaultValues={servicesDefaultValues}
+                context={serviceContext}
                 name="Services"
-                collectionName={collectionName}
-                fields={servicesFields}
             />
         </div>
     )

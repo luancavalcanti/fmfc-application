@@ -5,14 +5,15 @@ import { MenuContainerStyled } from "../styles/MenuContainerStyled"
 
 export default function MenuContracts() {
     const location = useLocation()
-    const { contractsView, title } = location.state || {} //props
+    const { title } = location.state || {} //props
     const { data: complaints } = useGetData('complaints')
     const navigate = useNavigate()
-    const contract = contractsView.map(contract => contract.client + " - " + contract.service)
-
-    function handleView(complaintsView, client, title, service) {
-        navigate('complaints', { state: { complaintsView, client, title, service } })
+    // const contract = contractsView.map(contract => contract.client + " - " + contract.service)
+    function handleView(client, title, service) {
+        navigate('complaints', { state: { client, title, service } })
     }
+
+    const services = [...new Set(complaints.map(complaint => complaint.service))]
 
     return (
         <MenuContainerStyled>
@@ -21,20 +22,17 @@ export default function MenuContracts() {
                 <h2>{title}</h2>
             </div>
             <div id="groupContainer">
-                {contractsView && contractsView.map((contractView, index) => {
-                    const complaintsFiltered = complaints.filter(complaint => complaint.contract === contract[index])
-                    const subtitle = `Complaint(s): ${complaintsFiltered.length}`
+                {services && services.map((service, index) => {
+                    const complaintsFiltered = complaints?.filter(complaint => complaint.service === service)
                     return (
                         <MenuContainer
                             key={index}
-                            title={contractView.service}
-                            subtitle={subtitle}
-                            handleView={() => handleView(complaintsFiltered, contractView.client, title, contractView.service)}
-                            buttonHidden={complaintsFiltered.length > 0 ? false : true}
+                            title={service}
+                            subtitle={"Complaint(s): " + complaintsFiltered.length}
+                            handleView={() => handleView(title, title, service)}
                         />
                     )
                 })}
-
             </div>
             <br />
             {/* <button onClick={() => navigate(-1)}>Back</button><br /> */}

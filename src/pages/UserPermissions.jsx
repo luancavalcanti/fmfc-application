@@ -1,37 +1,14 @@
+import { useContext } from "react"
 import CreateTable from "../components/CreateTable"
-import useGetData from "../hooks/useGetData"
+import { UserPermissionsContext } from "../context/UserPermissionsContext"
 
 export default function UserPermissions() {
-    const collectionName = 'userPermissions'
-    const { data } = useGetData(collectionName)
-
-    const roleList = ["user", "admin", "new"]
-    const userPermissionsDefaultValues = {
-        email: "",
-        role: ""
-    }
-    const userPermissionsFields = [
-        {
-            label: "Email",
-            type: "email",
-            name: "email",
-        },
-        {
-            label: "Role",
-            type: "select",
-            list: roleList,
-            name: "role",
-        },
-    ]
+    const userPermissionsContext = useContext(UserPermissionsContext)
     return (
         <div>
             <CreateTable
-                data={data}
-                tableValues={userPermissionsDefaultValues}
-                defaultValues={userPermissionsDefaultValues}
+                context={userPermissionsContext}
                 name="User Permissions"
-                collectionName={collectionName}
-                fields={userPermissionsFields}
             />
         </div>
     )

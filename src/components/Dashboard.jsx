@@ -70,6 +70,10 @@ export default function Dashboard() {
                     );
                 })}
             </ComplaintsContainer>
+            <h2>Complaints chart</h2>
+            <ComplaintsContainer>
+                <img style={{ width: "100%" }} src="https://www.jaspersoft.com/content/dam/jaspersoft/images/graphics/infographics/column-chart-example.svg" alt="" />
+            </ComplaintsContainer>
         </div>
     );
 }

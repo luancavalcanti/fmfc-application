@@ -8,7 +8,6 @@ import Navbar from "./Navbar";
 export default function ProtectedLayout() {
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
-
     return (
         user?.accessToken
             ?

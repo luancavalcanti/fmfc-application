@@ -7,52 +7,9 @@ import TextField from "./TextField"
 import MultipleSelectField from "./MultipleSelectField"
 import TextareaField from "./TextareaField"
 import FileField from "./FileField"
-import styled from "styled-components"
 import { useNavigate } from "react-router-dom"
+import { FormStyled } from "../styles/FormStyled"
 
-const EditContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    background-color: #33BECA;
-    padding: 20px;
-    border-radius: 10px;
-    border: 5px solid #B3E588;
-    margin-top: 20px;
-    h2{
-        margin: 0;
-    }
-    #fieldContainer{
-        display: flex;
-        flex-direction: column;
-        
-        label{
-            align-self: flex-start;
-        }
-        input, select{
-            background-color: aliceblue;
-            color: #555;
-            padding: 10px;
-            border-radius: 10px;
-            border:none;
-            &:focus {
-                    outline: none;
-                }
-        }
-    }
-    #buttonContainer{
-        margin-top: 20px;
-        #btn-update{
-            background-color: #a2c11c;
-            color: white;
-        }
-
-        #btn-delete{
-            background-color: #f95959;
-            color:white;
-        }
-    }
-
-`
 
 export default function CreateUpdate({ id, viewUpdate, collectionName, fields, onUpdate }) {
     const { data } = useGetData(collectionName)
@@ -96,7 +53,7 @@ export default function CreateUpdate({ id, viewUpdate, collectionName, fields, o
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
     return (
         <>
-            <EditContainer>
+            <FormStyled>
                 {updateData &&
                     fields.map((field, index) => {
                         const { label, type, name, list } = field
@@ -131,7 +88,7 @@ export default function CreateUpdate({ id, viewUpdate, collectionName, fields, o
                         }
                     }}>Delete</button>
                 </div>
-            </EditContainer>
+            </FormStyled>
         </>
     )
 }

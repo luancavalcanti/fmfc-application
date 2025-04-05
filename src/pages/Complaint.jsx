@@ -9,7 +9,6 @@ import { RiSendPlane2Line } from "react-icons/ri"
 import SelectField from "../components/SelectField"
 import { doc, updateDoc } from "firebase/firestore"
 import { db } from "../firebase-config"
-import { TbRefresh } from "react-icons/tb"
 
 const ComplaintContainer = styled.div`
     display: flex;
@@ -37,17 +36,12 @@ const ComplaintContainer = styled.div`
             margin-top: 10px;
             position: absolute;
             left: 0;
+            background-color: #ccc;
         }
         h2{
             flex-grow: 1;
             text-align: center;
         }
-    }
-    
-    #btn-back{
-        width: 100px;
-        margin-left: 20px;
-        margin-top: 10px;
     }
 
     #title {
@@ -69,7 +63,7 @@ const ComplaintContainer = styled.div`
         color: #555;
         display: flex;
         flex-direction: column;
-        background-color: #ecf0f1;
+        background-color: white;
         border-radius: 10px;
         @media (max-width: 480px){
             margin: 0;
@@ -88,7 +82,7 @@ const ComplaintContainer = styled.div`
             flex-direction: row;
             flex-wrap: wrap;
             justify-content: flex-start;
-            background-color: #d5dbdb;
+            background-color: #eee;
             border-radius: 10px;
             padding: 8px;
             img{
@@ -110,11 +104,10 @@ const ComplaintContainer = styled.div`
                 border-radius: 10px;
                 margin:0 10px
             }
-            button{
+            #btn_update{
                 display: flex;
                 align-items: center;
                 background-color: #ccc;
-                color: white;
                 cursor: pointer;
                 &:hover{
                     background-color: #999;
@@ -145,7 +138,7 @@ const ComplaintContainer = styled.div`
 
         #description{
             p{
-                background-color: #d5dbdb;
+                background-color: #eee;
                 padding: 8px;
                 margin: 0;
                 border-radius: 10px;
@@ -161,7 +154,7 @@ const ComplaintContainer = styled.div`
             align-items: flex-start;
             width: 100%;
             min-height: 100px;
-            background-color: #d5dbdb;
+            background-color: #eee;
             border-radius: 10px;
             /* padding: 8px; */
             box-sizing: border-box;
@@ -180,7 +173,7 @@ const ComplaintContainer = styled.div`
                     border-radius: 10px;
 
                     #comment{
-                        background-color: #d5dbdb;
+                        background-color: #eee;
                         margin: 0;
                         padding: 5px 10px;
                         border-radius: 10px;
@@ -210,6 +203,7 @@ const ComplaintContainer = styled.div`
                     padding: 10px;
                     width: 4em;
                     background-color:rgb(116, 170, 116);
+                    color: white;
                     margin: 0 0 0 6px;
                     align-items: center;
                 }
@@ -217,7 +211,7 @@ const ComplaintContainer = styled.div`
                 width: 100%;
                 padding: 20px;
                 font-size: 1em;
-                background-color: #d5dbdb;
+                background-color: #eee;
                 border: none;
                 border-radius: 10px 0 0 10px;
                 color: #555;
@@ -247,92 +241,87 @@ const InputFile = styled.div`
         text-align: center;
     }
 `
-
 export default function Complaint() {
-    const location = useLocation()
-    const { complaintView, complaintId } = location.state
-    const { data: complaints, getData: getComplaints } = useGetData('complaints')
-    const complaintFiltered = complaints.filter(complaint => complaint.id === complaintId)[0]
     const navigate = useNavigate()
+    const location = useLocation()
+    const { complaint, complaintId, color } = location.state
     const { formData, handleCreate, setFormData, images, setImages } = useCreateData('comments')
-    const [previewImages, setPreviewImages] = useState(null)
     const { data: status } = useGetData('status')
-    const statusColor = status.filter(item => item.name === complaintFiltered.status)[0]
-    const [newStatus, setNewStatus] = useState("")
-    const statusList = status.map(item => item.name)
-    const { user } = useContext(UserContext)
-    const { data: userPermissions } = useGetData('userPermissions')
-    const permission = userPermissions.filter(permission => permission.email === user.email)[0]
+    const { user, role } = useContext(UserContext)
     const { data: comments, getData: getComments } = useGetData('comments')
     const commentsFiltered = comments.filter(comment => comment.complaintID === complaintId).sort((a, b) => new Date(a.date_in) - new Date(b.date_in))
     const time = new Date().toISOString()
+    const [newStatus, setNewStatus] = useState("")
+    const [newColor, setNewColor] = useState(color)
+    const [previewImages, setPreviewImages] = useState(null)
+    const [complaintTemp, setComplaintTemp] = useState(complaint)
     const complaintDefaultValues = {
-        complaintID: complaintView.id,
+        complaintID: complaintTemp.id,
         user: user.email,
         complaint: "",
         images: [],
         date_in: time,
-
     }
     useEffect(() => {
         setFormData(complaintDefaultValues)
     }, [])
-
     function handleChangeComment(e) {
         setFormData(prev => ({
             ...prev,
             [e.target.name]: e.target.value
         }))
     }
-
     async function handleSend() {
         await handleCreate()
         setFormData(complaintDefaultValues)
         setPreviewImages(null)
         getComments()
     }
-
     function handleImageChange(e) {
         const files = Array.from(e.target.files)
         setImages(files)
         setPreviewImages(files.map(file => URL.createObjectURL((file))))
-    };
-    async function handleStatusChange(id) {
+    }
+    async function handleStatusChange(id, statusUpdated) {
+        setNewColor(status.filter(status => status.name === statusUpdated)[0].color)
+        setComplaintTemp(prev => ({
+            ...prev,
+            status: statusUpdated
+        }))
         await updateDoc(doc(db, "complaints", id), {
-            status: newStatus
+            status: statusUpdated
         })
-        getComplaints()
+
     }
     return (
-        complaintFiltered && <>
-            <ComplaintContainer color={statusColor?.color}>
+        complaintTemp && <>
+            <ComplaintContainer color={newColor}>
                 <div id="container-head">
                     <button id="btn-back" onClick={() => navigate(-1)}>Back</button>
-                    <h2>{complaintFiltered.contract.split(' - ')[0]}</h2>
+                    <h2>{complaintTemp.client}</h2>
                 </div>
                 <div id="title">
-                    <h3>{complaintFiltered.contract.split(' - ')[1]}</h3>
-                    <p>{complaintFiltered.status}</p>
+                    <h3>{complaintTemp.service}</h3>
+                    <p>{complaintTemp.status}</p>
                 </div>
                 <div id="body">
-                    {permission?.role === "admin" && <div id="changeStatusContainer">
+                    {role === "admin" && <div id="changeStatusContainer">
                         <SelectField
                             label="Status"
-                            list={statusList}
-                            value={newStatus ? newStatus : complaintFiltered.status}
+                            list={status.map(item => item.name)}
+                            value={newStatus || complaintTemp.status}
                             onChange={(e) => setNewStatus(e.target.value)}
-
                         />
-                        <button onClick={() => handleStatusChange(complaintFiltered.id)}><TbRefresh /> Update</button>
+                        {newStatus && <button id="btn-changeStatus" onClick={() => handleStatusChange(complaintTemp.id, newStatus)}>Update Status</button>}
                     </div>}
                     <div id="description">
                         <label>Description</label>
-                        <p>{complaintFiltered.complaint}</p>
+                        <p>{complaintTemp.complaint}</p>
                     </div>
-                    {complaintFiltered.images.length > 0 && <div id="images">
+                    {complaintTemp.images.length > 0 && <div id="images">
                         <label>Images<br /></label>
                         <div id="imagesContainer">
-                            {complaintFiltered.images.map((image, index) => (
+                            {complaintTemp.images.map((image, index) => (
                                 <img key={index} src={image} />
                             ))}
                         </div>
@@ -357,7 +346,7 @@ export default function Complaint() {
                             ))}
                         </div>
                         <div id="commentInput">
-                            <input type="text" onChange={handleChangeComment} value={formData?.complaint} name="complaint" required></input>
+                            <input type="text" onChange={handleChangeComment} value={formData?.complaint || ""} name="complaint" required></input>
                             <InputFile>
                                 <label htmlFor="inputFile"><LuImagePlus /></label>
                                 <input type="file" id="inputFile" onChange={handleImageChange} name="images" multiple />
