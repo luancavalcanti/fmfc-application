@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import useGetData from "../hooks/useGetData";
+import ButtonBack from "./ButtonBack";
 
 const TableContainer = styled.div`
     display: flex;
@@ -83,10 +85,10 @@ const TableStyled = styled.table`
 
 `
 export default function CreateTable({ context, name }) {
-    const { defaultValues, tableValues, data, collectionName, fields } = context;
-    console.log(defaultValues)
+    const { defaultValues, tableValues, collectionName, fields } = context;
+    const { data } = useGetData(collectionName)
     const headers = Object.keys(tableValues)
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     function handleUpdate(itemId) {
         navigate(`${itemId}`, { state: { fields, name, collectionName } });
     }
@@ -96,7 +98,7 @@ export default function CreateTable({ context, name }) {
     return (
         <TableContainer>
             <div id="table-header">
-                <button id="btn-back" onClick={() => navigate(-1)}>Back</button>
+                <ButtonBack />
                 <h2>{name} List</h2>
                 <button id="btn-new" onClick={() => handleNewForm()}>New</button>
             </div>

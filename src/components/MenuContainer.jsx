@@ -8,7 +8,8 @@ const BoxContainer = styled.div`
             width: 100%;
         }
         button{
-            background-color: white;
+            background-color:rgba(51, 189, 202, 0.2);
+            
             width: 100%;
             padding: 20px;
             border-radius: 20px;
@@ -23,12 +24,12 @@ const BoxContainer = styled.div`
                 }
             }
             &:hover{
-                background-color:rgba(51, 189, 202, 0.22);
+                background-color:rgba(51, 189, 202, 0.1);
                 &:disabled {
-                background-color: #ccc;
-                color: #555;
-                cursor: default;
-            }
+                    background-color: #ccc;
+                    color: #555;
+                    cursor: default;
+                }
             }
         }
         .titleContainer {
@@ -47,6 +48,11 @@ const BoxContainer = styled.div`
                 font-size: 1.3em;
             }
         }
+        
+        .title.add{
+            background-color:green;
+        }
+
         .subtitle {
             color:#888;
             p{
@@ -58,7 +64,7 @@ const BoxContainer = styled.div`
 export default function MenuContainer({ title, title2, subtitle, handleView, buttonHidden = false }) {
     return (
         <BoxContainer>
-            <button onClick={handleView} disabled={buttonHidden}>
+            <button style={title === "Add" ? { backgroundColor: "#7dd87d", color: "white" } : {}} onClick={handleView} disabled={buttonHidden}>
                 <div className="titleContainer">
                     <div className="title">
                         {title2 && <p>{title2}</p>}

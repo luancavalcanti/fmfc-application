@@ -32,7 +32,7 @@ export default function MenuAdmin() {
             <>
                 <MenuContainerStyled>
                     <div id="container-head">
-                        <h2>Admin</h2>
+                        <h3>Admin</h3>
                     </div>
                     {listGroup.map((group, index) => (
                         <div id="groupContainer" key={index}>

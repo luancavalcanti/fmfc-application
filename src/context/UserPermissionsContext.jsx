@@ -35,6 +35,7 @@ export function UserPermissionsProvider({ children }) {
             defaultValues,
             tableValues,
             fields,
+            collectionName,
         }}>
             {children}
         </UserPermissionsContext.Provider>

@@ -8,33 +8,55 @@ import Logo from '/public/logo.png'
 const Container = styled.div`
     display: flex;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
-    background-image: linear-gradient(to bottom right, #33BECA,rgb(33, 124, 133));
+    background-image: linear-gradient(to bottom, #33BECA,rgb(33, 124, 133));
     height: 100vh;
+
+    @media (max-width: 480px){
+        /* justify-content: flex-start;  */
+    }
 
     #loginContainer{
         display: flex;
         flex-direction: column;
-        background-color: #33BECA;
+        background-color: #eee;
+        width: 40%;
         padding: 40px;
-        border-radius: 20px;
+        border-radius: 10px;
         box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+        box-sizing: border-box;
         img {
             align-self:center;
-            height: 120px;
-            width: 120px;
+            height: 80px;
+            width: 80px;
         }
         input {
             padding: 15px;
-            border-radius: 10px;
+            border-radius: none;
             font-size: 1em;
             border: none;
-            box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+            border-bottom: 1px solid #bbb;
             background-color: #eee;
             &:focus {
                 outline: none;
-                box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
             }
+        }
+        #btn-login {
+            background-color: #33BECA;
+            color: #fff;
+            padding: 10px 30px;
+        }
+
+        @media (max-width: 1024px){
+            width: 50%;
+        }
+        @media (max-width: 768px){
+            width: 80%;
+        }
+        @media (max-width: 480px){
+            border-radius: 0; 
+            width: 100%;
         }
     }
 
@@ -54,23 +76,24 @@ export default function Login() {
                 <img src={Logo} alt="Logo" />
                 <h2>FMFC</h2>
                 <TextField
-                    label="E-mail"
                     type="email"
                     name="email"
+                    placeholder="E-mail"
                     onChange={e => setEmail(e.target.value)}
                     value={email}
                 />
+                <br />
                 <TextField
-                    label="Password"
                     type="password"
                     name="password"
+                    placeholder="Password"
                     onChange={e => setPassword(e.target.value)}
                     value={password}
                 />
                 <br />
                 <div>
-                    <button onClick={handleLogin}>Login</button>
-                    <button onClick={signIn}>Register user</button>
+                    <button id="btn-login" onClick={handleLogin}>Login</button>
+                    {/* <button onClick={signIn}>Register user</button> */}
                 </div>
             </div>
         </Container>

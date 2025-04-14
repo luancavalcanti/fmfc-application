@@ -51,6 +51,7 @@ export function ClientProvider({ children }) {
     return (
         <ClientContext.Provider value={{
             data,
+            collectionName,
             defaultValues,
             tableValues,
             fields,

@@ -26,6 +26,7 @@ export function ServicesProvider({ children }) {
             defaultValues,
             tableValues,
             fields,
+            collectionName,
         }}>
             {children}
         </ServicesContext.Provider>

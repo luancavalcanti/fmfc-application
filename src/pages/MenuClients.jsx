@@ -2,17 +2,28 @@ import { useLocation, useNavigate } from "react-router-dom"
 import useGetData from "../hooks/useGetData"
 import MenuContainer from "../components/MenuContainer"
 import { MenuContainerStyled } from "../styles/MenuContainerStyled"
-import { useContext } from "react"
+import React, { useContext, useEffect } from "react"
 import { ClientContext } from "../context/ClientContext"
-import { FaPlus } from "react-icons/fa"
 import { UserContext } from "../context/UserContext"
+import { BreadcrumbContext } from "../context/BreadcrumbContext"
+import { TbReportSearch } from "react-icons/tb"
 
 export default function MenuClients() {
     const location = useLocation()
-    const { employee } = location.state || ""
-    const { collectionName, data: clients, defaultValues, fields } = useContext(ClientContext)
+    const { employee, lastCrumbs } = location.state || ""
+    const { collectionName, defaultValues, fields } = useContext(ClientContext)
     const { data: contracts } = useGetData('contracts')
+    const { data: clients } = useGetData('clients')
     const { role, userName } = useContext(UserContext)
+    const { crumbs, setCrumbs } = useContext(BreadcrumbContext)
+    useEffect(() => {
+        if (employee) {
+            setCrumbs([...lastCrumbs, employee])
+        } else {
+            setCrumbs(["Clients"])
+        }
+    }, [setCrumbs])
+
     const name = "Clients"
     let contractList = []
     let clientList = []
@@ -31,21 +42,20 @@ export default function MenuClients() {
         clientList = clients.map(client => client.name);
     }
     const navigate = useNavigate()
-    function handleView(contractsView, title) {
-        navigate('/home/contracts', { state: { contractsView, title } })
+    function handleView(title, user) {
+        navigate('/home/contracts', { state: { title, lastCrumb: crumbs, user, role } })
     }
-
+    console.log
     return (
         <>
             <MenuContainerStyled>
                 <div id="container-head">
-                    {employee && <button id="btn-back" onClick={() => navigate(-1)}>Back</button>}
-                    {user
-                        ? <h2>{user}</h2>
-                        : <>
-                            <h2>Clients</h2>
-                            <button id="btn-add" onClick={() => navigate(`/home/admin/clients/new`, { state: { defaultValues, fields, name, collectionName } })}><FaPlus /></button>
-                        </>
+                    <h3>Clients List</h3>
+                    {clientList.length === 0 &&
+                        <div id="empty">
+                            <TbReportSearch id="icon" />
+                            <p>This employee does not have any contract associated...</p>
+                        </div>
                     }
                 </div>
                 <div id="groupContainer" >
@@ -53,15 +63,26 @@ export default function MenuClients() {
                         const contractFiltered = contractList.filter(item => item.client === client)
                         const subtitle = `Contract(s): ${contractFiltered.length}`
                         return (
-                            <MenuContainer
-                                key={index}
-                                title={client}
-                                subtitle={subtitle}
-                                handleView={() => handleView(contractFiltered, client)}
-                                buttonHidden={contractFiltered.length === 0 ? true : false}
-                            />
+                            <React.Fragment key={index}>
+                                <MenuContainer
+                                    title={client}
+                                    subtitle={subtitle}
+                                    handleView={() => handleView(client, user, role)}
+                                />
+                            </React.Fragment>
                         )
                     })}
+                    {role === "admin" && user === '' && <MenuContainer
+                        title={"Add"}
+                        subtitle={"New Client"}
+                        handleView={
+                            () => navigate(`/home/admin/clients/new`,
+                                {
+                                    state: { defaultValues, fields, name, collectionName, lastCrumbs: crumbs },
+                                }
+                            )
+                        }
+                    />}
                 </div>
             </MenuContainerStyled>
         </>

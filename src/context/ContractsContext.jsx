@@ -56,7 +56,8 @@ export function ContractProvider({ children }) {
             data,
             defaultValues,
             tableValues,
-            fields
+            fields,
+            collectionName
         }}>
             {children}
         </ContractContext.Provider>

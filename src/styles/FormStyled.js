@@ -37,26 +37,34 @@ export const FormStyled = styled.div`
         }
     }
     #buttonContainer{
+        display: flex;
+        justify-content: center;
+        gap: 10px;
         margin-top: 20px;
         #btn-create, #btn-update{
             background-color: #7dd87d;
             color: white;
+            padding: 10px 20px;
             &:hover{
                 background-color: white;
                 color: #7dd87d;
+                border: 1px solid #7dd87d;
             }
         }
         #btn-cancel{
             background-color: #777;
             color: white;
+            padding: 10px 20px;
             &:hover{
                 background-color: white;
                 color: #555;
+                border: 1px solid #777;
             }
         }
         #btn-delete{
             background-color: #f95959;
             color:white;
+            padding: 10px 20px;
             &:hover{
                 background-color: white;
                 color: #f95959;

@@ -12,13 +12,13 @@ const NavBarStyled = styled.div`
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
-    height: 80px;
+    height: 60px;
     
     #side-menu{
         /* display: none; */
         background-color: #33BECA;
         height: calc(100vh - 80px);
-        top: 80px;
+        top: 60px;
         left: 0;
         position: absolute;
         display: flex;
@@ -30,7 +30,6 @@ const NavBarStyled = styled.div`
         #item{
             margin: 10px;
             cursor: pointer;
-            /* background-color: red; */
             padding: 8px;
             color: white;
             border-bottom: 1px solid white;
@@ -48,10 +47,13 @@ const NavBarStyled = styled.div`
     }
     #logo{
         display: flex;
+        align-items: center;
+        gap:5px;
         cursor: pointer;
         order: 1;
         img{
-            width: 50px;
+            width: 40px;
+            height: 100%;
         }
         
     }
@@ -60,13 +62,14 @@ const NavBarStyled = styled.div`
         flex-direction: row;
         order: 1;
         gap: 20px;
+        color: white;
         #item{
             cursor: pointer;
             margin: 0;
             border-right: 1px solid white;
             padding-right: 20px;
             &:hover{
-                color: white;
+                color: #333;
             }
             &:last-child{
                 border: none;
@@ -75,7 +78,7 @@ const NavBarStyled = styled.div`
     }
     @media (max-width: 768px) {
         #burger-menu{
-            display: block;
+            display: flex;
         }
         #menuItems{
             display: none;
@@ -105,8 +108,9 @@ const NavBarStyled = styled.div`
         display: flex;
         flex-direction: column;
         position: absolute;
-        padding: 8px;
-        top: 80px  ;
+        padding: 15px;
+        gap: 10px;
+        top: 60px  ;
         right: 0;
         background-color: #aaa;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -135,7 +139,7 @@ export default function Navbar() {
                 <h2 id="item" onClick={() => { navigate("/home"), setSideMenu(!sideMenu) }}>Home</h2>
                 {role === "admin" && <>
                     <h2 id="item" onClick={() => { navigate("clients"), setSideMenu(!sideMenu) }}>Clients</h2>
-                    <h2 id="item" onClick={() => { navigate("employee"), setSideMenu(!sideMenu) }}>Employees</h2>
+                    <h2 id="item" onClick={() => { navigate("employees"), setSideMenu(!sideMenu) }}>Employees</h2>
                     <h2 id="item" onClick={() => { navigate("admin"), setSideMenu(!sideMenu) }}>Admin</h2>
                 </>}
 
@@ -149,7 +153,7 @@ export default function Navbar() {
                     <>
                         <p id="item" onClick={() => navigate("/home")}>Home</p>
                         <p id="item" onClick={() => navigate("clients")}>Clients</p>
-                        <p id="item" onClick={() => navigate("employee")}>Employees</p>
+                        <p id="item" onClick={() => navigate("employees")}>Employees</p>
                         <p id="item" onClick={() => navigate("admin")}>Admin</p>
                     </>
                 )}

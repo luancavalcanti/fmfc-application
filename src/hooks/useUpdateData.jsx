@@ -30,6 +30,7 @@ export default function useUpdateData(collectionName, data, callback) {
             await updateDoc(docRef, updateData)
         }
         navigate(-1)
+
         callback && callback()
     }
 

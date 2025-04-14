@@ -7,7 +7,7 @@ export function EmployeeProvider({ children }) {
     const getCurrentDate = () => { const today = new Date(); return today.toISOString().split("T")[0]; };
     const collectionName = 'employees'
     const { data } = useGetData(collectionName)
-    const userList = data.map(user => user.email)
+    // const userList = data.map(user => user.email)
 
     const defaultValues = {
         // uid: "",
@@ -30,12 +30,12 @@ export function EmployeeProvider({ children }) {
         // dateIn: getCurrentDate()
     }
     const fields = [
-        {
-            label: "User",
-            type: "select",
-            list: userList,
-            name: "uid",
-        },
+        // {
+        //     label: "User",
+        //     type: "select",
+        //     list: userList,
+        //     name: "uid",
+        // },
         {
             label: "Name",
             type: "text",

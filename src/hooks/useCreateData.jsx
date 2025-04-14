@@ -2,14 +2,15 @@ import { addDoc, collection } from "firebase/firestore"
 import { db, storage } from "../firebase-config"
 import { useState } from "react"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
+import { useNavigate } from "react-router-dom"
 
 
 export default function useCreateData(collectionName, defaultValues, callback) {
     const [formData, setFormData] = useState(defaultValues)
     const [images, setImages] = useState(null)
     const time = new Date().toISOString()
-
-    async function handleCreate(viewUpdate) {
+    const navigate = useNavigate()
+    async function handleCreate(back) {
         if (images?.length > 0) {
             const uploadPromises = images.map(async (image, index) => {
                 const fileName = index + "_" + time.replace(/[^a-zA-Z0-9]/g, '') + "." + image.name.substring(image.name.lastIndexOf('.') + 1)
@@ -29,7 +30,7 @@ export default function useCreateData(collectionName, defaultValues, callback) {
         }
 
         setFormData(defaultValues)
-        viewUpdate && viewUpdate()
+        back && navigate(-1)
         callback && callback()
     }
 

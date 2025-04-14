@@ -54,8 +54,8 @@ export default function Dashboard() {
     const topThreeComplaints = sortedComplaints?.slice(0, 3);
     return (
         <div>
-            <h1>Dashboard</h1>
-            <h2>Recent Complaints</h2>
+            <h2>Dashboard</h2>
+            <h3>Recent Complaints</h3>
             <ComplaintsContainer>
                 {topThreeComplaints.map((complaint, index) => {
                     const formattedDate = new Date(complaint.date_in).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
@@ -70,7 +70,7 @@ export default function Dashboard() {
                     );
                 })}
             </ComplaintsContainer>
-            <h2>Complaints chart</h2>
+            <h3>Complaints chart</h3>
             <ComplaintsContainer>
                 <img style={{ width: "100%" }} src="https://www.jaspersoft.com/content/dam/jaspersoft/images/graphics/infographics/column-chart-example.svg" alt="" />
             </ComplaintsContainer>

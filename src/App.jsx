@@ -14,7 +14,7 @@ import Complaints from "./pages/Complaints";
 import Status from "./pages/Status";
 import MenuContracts from "./pages/MenuContracts";
 import MenuComplaints from "./pages/MenuComplaints";
-import Complaint from "./pages/complaint";
+import Complaint from "./pages/complaint"
 import AdminRoute from "./pages/AdminRoute";
 import MenuClients from "./pages/MenuClients";
 import MenuEmployees from "./pages/MenuEmployees";
@@ -28,6 +28,7 @@ import { UserPermissionsProvider } from "./context/UserPermissionsContext";
 import { ServicesProvider } from "./context/ServicesContext";
 import { ContractProvider } from "./context/ContractsContext";
 import { StatusProvider } from "./context/StatusContext";
+import { BreadcrumbProvider } from "./context/BreadcrumbContext";
 
 function App() {
   const adminRoutes = [
@@ -43,43 +44,46 @@ function App() {
   return (
     <>
       <UserProvider>
-        <ClientProvider>
-          <EmployeeProvider>
-            <ComplaintsProvider>
-              <UserPermissionsProvider>
-                <ServicesProvider>
-                  <ContractProvider>
-                    <StatusProvider>
-                      <BrowserRouter>
-                        <Routes>
-                          <Route path="/login" element={<Login />} />
-                          <Route path="/home" element={<ProtectedLayout />}>
-                            <Route index element={<Home />} />
-                            <Route path="admin" element={<AdminRoute />}>
-                              <Route index element={<MenuAdmin />} />
-                              {adminRoutes.map(({ path, component }, index) => (
-                                <React.Fragment key={index}>
-                                  <Route path={path} element={component} />
-                                  <Route path={`${path}/new`} element={<NewForm />} />
-                                  <Route path={`${path}/:id`} element={<UpdateTable />} />
-                                </React.Fragment>
-                              ))}
+        <BreadcrumbProvider>
+          <ClientProvider>
+            <EmployeeProvider>
+              <ComplaintsProvider>
+                <UserPermissionsProvider>
+                  <ServicesProvider>
+                    <ContractProvider>
+                      <StatusProvider>
+                        <BrowserRouter>
+                          <Routes>
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/home" element={<ProtectedLayout />}>
+                              <Route index element={<Home />} />
+                              <Route path="admin" element={<AdminRoute />}>
+                                <Route index element={<MenuAdmin />} />
+                                {adminRoutes.map(({ path, component }, index) => (
+                                  <React.Fragment key={index}>
+                                    <Route path={path} element={component} />
+                                    <Route path={`${path}/new`} element={<NewForm />} />
+                                    <Route path={`${path}/:id`} element={<UpdateTable />} />
+                                  </React.Fragment>
+                                ))}
+                              </Route>
+                              <Route path="clients" element={<MenuClients />} />
+                              <Route path="employees" element={<MenuEmployees />} />
+                              <Route path="employee/clients" element={<MenuClients />} />
+                              <Route path="contracts" element={<MenuContracts />} />
+                              <Route path="contracts/complaints" element={<MenuComplaints />} />
+                              <Route path="contracts/complaints/complaint" element={<Complaint />} />
                             </Route>
-                            <Route path="clients" element={<MenuClients />} />
-                            <Route path="employee" element={<MenuEmployees />} />
-                            <Route path="contracts" element={<MenuContracts />} />
-                            <Route path="contracts/complaints" element={<MenuComplaints />} />
-                            <Route path="contracts/complaints/complaint" element={<Complaint />} />
-                          </Route>
-                        </Routes>
-                      </BrowserRouter>
-                    </StatusProvider>
-                  </ContractProvider>
-                </ServicesProvider>
-              </UserPermissionsProvider>
-            </ComplaintsProvider>
-          </EmployeeProvider>
-        </ClientProvider>
+                          </Routes>
+                        </BrowserRouter>
+                      </StatusProvider>
+                    </ContractProvider>
+                  </ServicesProvider>
+                </UserPermissionsProvider>
+              </ComplaintsProvider>
+            </EmployeeProvider>
+          </ClientProvider>
+        </BreadcrumbProvider>
       </UserProvider>
     </>
   );

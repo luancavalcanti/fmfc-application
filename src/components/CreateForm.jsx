@@ -9,28 +9,31 @@ import { FormStyled } from "../styles/FormStyled"
 import { useContext, useState } from "react"
 import { ComplaintsContext } from "../context/ComplaintsContext"
 
-export default function CreateForm({ fields, defaultValues, collectionName, onCreate, viewUpdate }) {
+export default function CreateForm({ fields, defaultValues, collectionName, onCreate }) {
     const navigate = useNavigate()
     const { getDependence } = useContext(ComplaintsContext)
     const { handleCreate, setFormData, formData, setImages } = useCreateData(collectionName, defaultValues, onCreate)
+    const serviceField = (fields.find(field => field.name === "service"))
     const [updateFields, setUpdateFields] = useState(fields)
+    if (defaultValues.service) {
+        serviceField.list = [defaultValues.service]
+    }
     function handleChange(e, dependence) {
         const { name, value } = e.target
         if (dependence) {
             const service = getDependence(value)
+            serviceField.list = service
             setUpdateFields(prev =>
                 prev.map(field =>
                     field.name === "service" ? { ...field, list: service } : field
                 )
             )
-            console.log(service)
         }
         setFormData(prev => ({
             ...prev,
             [name]: value
         }))
     }
-
     const componentMap = {
         select: SelectField,
         multipleSelect: MultipleSelectField,
@@ -51,6 +54,7 @@ export default function CreateForm({ fields, defaultValues, collectionName, onCr
                     updateFields.map((field, index) => {
                         const { label, type, name, list, hidden, dependence } = field
                         const Component = componentMap[type];
+
                         return (
                             <div id="fieldContainer" key={index}>
                                 <Component
@@ -68,7 +72,7 @@ export default function CreateForm({ fields, defaultValues, collectionName, onCr
                     })
                 }
                 <div id="buttonContainer">
-                    <button id="btn-create" onClick={() => handleCreate(viewUpdate)}>Create</button>
+                    <button id="btn-create" onClick={() => handleCreate(true)}>Create</button>
                     <button id="btn-cancel" onClick={() => navigate(-1)}>Cancel</button>
                 </div>
             </FormStyled>

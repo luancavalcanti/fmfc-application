@@ -47,7 +47,8 @@ export function StatusProvider({ children }) {
             data,
             defaultValues,
             tableValues,
-            fields
+            fields,
+            collectionName
         }}>
             {children}
         </StatusContext.Provider>

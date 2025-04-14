@@ -2,40 +2,69 @@ import { useLocation, useNavigate } from "react-router-dom"
 import useGetData from "../hooks/useGetData"
 import MenuContainer from "../components/MenuContainer"
 import { MenuContainerStyled } from "../styles/MenuContainerStyled"
+import { useContext, useEffect } from "react"
+import { ContractContext } from "../context/ContractsContext"
+import { BreadcrumbContext } from "../context/BreadcrumbContext"
+import { TbReportSearch } from "react-icons/tb"
 
 export default function MenuContracts() {
     const location = useLocation()
-    const { title } = location.state || {} //props
+    const { title, lastCrumb, user, role } = location.state || {} //props
     const { data: complaints } = useGetData('complaints')
+    const { crumbs, setCrumbs } = useContext(BreadcrumbContext)
     const navigate = useNavigate()
-    // const contract = contractsView.map(contract => contract.client + " - " + contract.service)
-    function handleView(client, title, service) {
-        navigate('complaints', { state: { client, title, service } })
+    const { defaultValues, fields, collectionName } = useContext(ContractContext)
+    const { data } = useGetData('contracts')
+    let contracts = (data.filter(contract => contract.client === title))
+    defaultValues.client = title;
+    const name = "Contracts"
+    if (user) {
+        contracts = contracts.filter(contract => contract.employees.includes(user))
     }
 
-    const services = [...new Set(complaints.map(complaint => complaint.service))]
+    useEffect(() => {
+        setCrumbs([...lastCrumb, title])
+    }, [setCrumbs, title, lastCrumb])
+
+    function handleView(client, title, service, role) {
+        navigate('complaints', { state: { client, title, service, lastCrumbs: crumbs, role } })
+    }
 
     return (
         <MenuContainerStyled>
-            <div id="container-head">
-                <button id="btn-back" onClick={() => navigate(-1)}>Back</button>
-                <h2>{title}</h2>
-            </div>
+            <h3>Contracts List</h3>
+            {contracts.length === 0 &&
+                <div id="empty">
+                    <TbReportSearch id="icon" />
+                    <p>This client does not have any contracts yet...</p>
+                </div>
+            }
             <div id="groupContainer">
-                {services && services.map((service, index) => {
-                    const complaintsFiltered = complaints?.filter(complaint => complaint.service === service)
+                {contracts && contracts.map((contract, index) => {
+                    const complaintsFiltered = complaints?.filter(complaint => complaint.service === contract.service && complaint.client === contract.client)
                     return (
                         <MenuContainer
                             key={index}
-                            title={service}
+                            title={contract.service}
                             subtitle={"Complaint(s): " + complaintsFiltered.length}
-                            handleView={() => handleView(title, title, service)}
+                            handleView={() => handleView(title, title, contract.service, role)}
                         />
                     )
                 })}
+                {role === "admin" && <MenuContainer
+                    title={"Add"}
+                    subtitle={"New Contract"}
+                    handleView={() => navigate(`/home/admin/contracts/new`, {
+                        state: {
+                            defaultValues: { ...defaultValues, employees: [user] }, fields,
+                            name,
+                            collectionName,
+                            lastCrumbs: crumbs,
+                        }
+                    })}
+                />}
             </div>
             <br />
-            {/* <button onClick={() => navigate(-1)}>Back</button><br /> */}
         </MenuContainerStyled>
 
     )
