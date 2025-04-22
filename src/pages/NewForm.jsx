@@ -22,9 +22,9 @@ export default function NewForm() {
     const newCrumb = `New ${name?.slice(0, -1)}`
 
     useEffect(() => {
+        if (!lastCrumbs) return (setCrumbs([newCrumb]))
         setCrumbs([...lastCrumbs, newCrumb])
-    }, [setCrumbs, lastCrumbs, newCrumb]
-    )
+    }, [setCrumbs, lastCrumbs, newCrumb])
 
     return (
         <FormStyled>

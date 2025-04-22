@@ -45,12 +45,13 @@ const TableStyled = styled.table`
     border-radius: 10px;
     overflow: hidden;
     border: 5px solid black;
-    table-layout: fixed; /* Add this line to avoid horizontal scroll */
+    table-layout: fixed; /*avoid horizontal scroll */
     thead{
         td{
             padding: 15px;
             text-align: left; 
-            color: #33BECA;
+            background-color: #33BECA;
+            color: #fff;
         }
         @media (max-width: 600px) {
             td:nth-child(n+4) {
@@ -68,8 +69,8 @@ const TableStyled = styled.table`
         }
         td{
             text-align: left;
-            padding: 15px 5px;
-            border-bottom: 1px solid black;
+            padding: 15px 15px;
+            border-bottom: 1px solid #ccc;
             cursor: pointer;
             white-space: normal;
             overflow: hidden;
